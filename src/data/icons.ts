@@ -5,44 +5,43 @@ import {
   BiLoaderAlt,
   BiLogOut,
 } from "react-icons/bi";
+
 import {
-  FaArrowLeft,
   FaFacebookF,
   FaGithub,
   FaGoogle,
   FaImdb,
   FaInstagram,
-  FaPlay,
-  FaRegStar,
-  FaRegStarHalfStroke,
-  FaStar,
   FaTiktok,
   FaXmark,
   FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
-import { IoSearch } from "react-icons/io5";
+
 import {
-  MdBookmark,
-  MdBookmarkBorder,
-  MdFavorite,
-  MdFavoriteBorder,
-  MdHome,
-  MdMovie,
-  MdOutlineHome,
-  MdOutlineMenu,
-  MdOutlineMovie,
-  MdOutlineTv,
-  MdPeople,
-  MdPeopleOutline,
-  MdThumbUpAlt,
-  MdThumbUpOffAlt,
-  MdTv,
-} from "react-icons/md";
+  IoBookmark,
+  IoBookmarkOutline,
+  IoFilmOutline,
+  IoFilmSharp,
+  IoHeartOutline,
+  IoHeartSharp,
+  IoHomeOutline,
+  IoHomeSharp,
+  IoMenu,
+  IoPeopleOutline,
+  IoPeopleSharp,
+  IoPlay,
+  IoSearch,
+  IoStar,
+  IoStarHalf,
+  IoStarOutline,
+  IoThumbsUp,
+  IoThumbsUpOutline,
+  IoTvOutline,
+  IoTvSharp,
+} from "react-icons/io5";
 
 // Arrow
-export const IconArrowLeft = FaArrowLeft;
-
 export const IconChevronLeft = BiChevronLeft;
 export const IconChevronRight = BiChevronRight;
 export const IconChevronsUp = BiChevronsUp;
@@ -58,29 +57,29 @@ export const IconTiktok = FaTiktok;
 export const IconYouTube = FaYoutube;
 
 // Fill
-export const IconHome = MdHome;
-export const IconFilm = MdMovie;
-export const IconTv = MdTv;
-export const IconUsers = MdPeople;
-export const IconHeart = MdFavorite;
-export const IconBookmark = MdBookmark;
-export const IconThumbsUp = MdThumbUpAlt;
+export const IconHome = IoHomeSharp;
+export const IconFilm = IoFilmSharp;
+export const IconTv = IoTvSharp;
+export const IconUsers = IoPeopleSharp;
+export const IconBookmark = IoBookmark;
+export const IconHeart = IoHeartSharp;
+export const IconThumbsUp = IoThumbsUp;
 export const IconLogout = BiLogOut;
-export const IconMenu = MdOutlineMenu;
+export const IconMenu = IoMenu;
 export const IconX = FaXmark;
-export const IconStar = FaStar;
+export const IconStar = IoStar;
 export const IconLoader = BiLoaderAlt;
 export const IconSearch = IoSearch;
-export const IconPlay = FaPlay;
+export const IconPlay = IoPlay;
 
 // Outline
-export const IconHomeOutline = MdOutlineHome;
-export const IconFilmOutline = MdOutlineMovie;
-export const IconTvOutline = MdOutlineTv;
-export const IconUsersOutline = MdPeopleOutline;
-export const IconBookmarkOutline = MdBookmarkBorder;
-export const IconHeartOutline = MdFavoriteBorder;
-export const IconThumbsUpOutline = MdThumbUpOffAlt;
-export const IconStarOutline = FaRegStar;
+export const IconHomeOutline = IoHomeOutline;
+export const IconFilmOutline = IoFilmOutline;
+export const IconTvOutline = IoTvOutline;
+export const IconUsersOutline = IoPeopleOutline;
+export const IconBookmarkOutline = IoBookmarkOutline;
+export const IconHeartOutline = IoHeartOutline;
+export const IconThumbsUpOutline = IoThumbsUpOutline;
+export const IconStarOutline = IoStarOutline;
 
-export const IconHalfStar = FaRegStarHalfStroke;
+export const IconHalfStar = IoStarHalf;

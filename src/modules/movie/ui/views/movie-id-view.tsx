@@ -7,6 +7,7 @@ import { convertDataImage } from "@/lib/utils";
 
 import { ButtonScrollTop } from "@/components/button-scroll-top";
 import { CardCarousel } from "@/components/card/card-carousel";
+import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
 import { Footer } from "@/components/navigation/footer";
 import { Banner } from "@/components/tmdb/banner";
 import { Cast } from "@/components/tmdb/cast";
@@ -44,6 +45,7 @@ export const MovieIdView = ({ id }: Props) => {
 
   return (
     <div className="flex w-full flex-col">
+      <Breadcrumbs title={data.title} className="absolute top-2 left-4 z-50" />
       <Banner
         backdrop={data.backdrop_path}
         poster={data.poster_path}

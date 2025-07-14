@@ -13,6 +13,7 @@ import { Cast } from "@/components/tmdb/cast";
 import { Media } from "@/components/tmdb/media";
 import { Reviews } from "@/components/tmdb/reviews";
 
+import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
 import { TvCurrentSession } from "@/modules/tv/ui/components/tv-current-session";
 
 type Props = {
@@ -44,6 +45,7 @@ export const TvIdView = ({ id }: Props) => {
 
   return (
     <div className="flex w-full flex-col">
+      <Breadcrumbs title={data.name} className="absolute top-2 left-4 z-50" />
       <Banner
         backdrop={data.backdrop_path}
         poster={data.poster_path}

@@ -10,6 +10,7 @@ import { convertDataImage } from "@/lib/utils";
 
 import { ButtonScrollTop } from "@/components/button-scroll-top";
 import { GridCard } from "@/components/grid-card";
+import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
 import { Footer } from "@/components/navigation/footer";
 
 type Props = {
@@ -50,7 +51,8 @@ export const TrendingView = ({ category }: Props) => {
   const dataGrid = convertDataImage({ allData: allData });
 
   return (
-    <>
+    <div className="flex flex-col space-y-4">
+      <Breadcrumbs />
       <GridCard linkPrefix={category} items={dataGrid} />
       <ButtonScrollTop />
       {hasNextPage ? (
@@ -70,6 +72,6 @@ export const TrendingView = ({ category }: Props) => {
           </>
         )
       )}
-    </>
+    </div>
   );
 };

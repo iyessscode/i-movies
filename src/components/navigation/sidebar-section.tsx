@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconType } from "react-icons/lib";
 
 import { IconChevronRight } from "@/data/icons";
 import { cn } from "@/lib/utils";
@@ -24,29 +23,23 @@ import {
 } from "@/components/ui/sidebar";
 
 type Props = {
-  items: {
+  items: Array<{
     label: string;
     url: string;
-    icon: IconType;
-    iconActive: IconType;
     description: string;
-    subItems?: {
+    icon: React.ComponentType<{ className?: string }>;
+    iconActive: React.ComponentType<{ className?: string }>;
+    subItems?: Array<{
       label: string;
       url: string;
       description: string;
-    }[];
-  }[];
+    }>;
+  }>;
 };
 
 export const SidebarSection = ({ items }: Props) => {
   const pathname = usePathname();
-  const { isMobile, setOpen } = useSidebar();
-
-  const onCloseSidebar = () => {
-    if (isMobile) {
-      setOpen(false);
-    }
-  };
+  const { setOpenMobile } = useSidebar();
 
   return (
     <SidebarGroup>
@@ -79,7 +72,7 @@ export const SidebarSection = ({ items }: Props) => {
                         <SidebarMenuSubButton
                           aria-label={subItem.description}
                           title={subItem.description}
-                          onClick={onCloseSidebar}
+                          onClick={() => setOpenMobile(false)}
                           asChild
                         >
                           <Link href={subItem.url} className="relative">
@@ -106,7 +99,7 @@ export const SidebarSection = ({ items }: Props) => {
                 className="font-medium data-[active=true]:font-semibold"
                 aria-label={item.description}
                 title={item.description}
-                onClick={onCloseSidebar}
+                onClick={() => setOpenMobile(false)}
                 asChild
               >
                 <Link href={item.url}>

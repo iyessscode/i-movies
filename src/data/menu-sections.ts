@@ -15,6 +15,19 @@ import {
   IconUsersOutline,
 } from "@/data/icons";
 
+type MenuItem = {
+  label: string;
+  url: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  iconActive: React.ComponentType<{ className?: string }>;
+  subItems?: Array<{
+    label: string;
+    url: string;
+    description: string;
+  }>;
+};
+
 export const menuSections = {
   publicSection: [
     {
@@ -89,7 +102,7 @@ export const menuSections = {
       icon: IconUsersOutline,
       iconActive: IconUsers,
     },
-  ],
+  ] as MenuItem[],
   privateSection: [
     {
       label: "Watchlist",
@@ -112,5 +125,5 @@ export const menuSections = {
       icon: IconThumbsUpOutline,
       iconActive: IconThumbsUp,
     },
-  ],
+  ] as MenuItem[],
 };

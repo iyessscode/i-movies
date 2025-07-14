@@ -10,9 +10,9 @@ export default function GridLayout({ children }: RootLayoutProps) {
   return (
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">
-        <AppNavbar />
+        <AppNavbar collapsible="icon" />
         <div className="flex flex-1">
-          <AppSidebar />
+          <AppSidebar collapsible="icon" />
           <SidebarInset className="min-h-screen">
             <div className="flex flex-1 flex-col p-4">{children}</div>
           </SidebarInset>

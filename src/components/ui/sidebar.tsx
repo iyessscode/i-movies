@@ -2,7 +2,14 @@
 
 import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
+import { Tektur } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
 import * as React from "react";
+
+import { IconMenu } from "@/data/icons";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +17,6 @@ import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -21,9 +27,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { IconMenu } from "@/data/icons";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -31,6 +34,11 @@ const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+
+const tektur = Tektur({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed";
@@ -163,7 +171,8 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+  const { isMobile, state, openMobile, setOpenMobile, open, setOpen } =
+    useSidebar();
 
   if (collapsible === "none") {
     return (
@@ -180,6 +189,44 @@ function Sidebar({
     );
   }
 
+  if (collapsible === "offcanvas" && !isMobile) {
+    return (
+      <Sheet open={open} onOpenChange={setOpen} {...props}>
+        <SheetContent
+          data-sidebar="sidebar"
+          data-slot="sidebar"
+          data-mobile="true"
+          className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) gap-0 p-0 [&>button]:hidden"
+          style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH,
+            } as React.CSSProperties
+          }
+          side={side}
+        >
+          <SheetHeader className="mt-0.5 flex flex-row gap-0 p-2">
+            <SheetTitle className="sr-only">Title</SheetTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="-ml-0.5 bg-transparent"
+              onClick={() => setOpen(false)}
+            >
+              <IconMenu />
+            </Button>
+            <Link href="/" className="flex items-center justify-center">
+              <Image src="/logo.svg" alt="LOGO" height={32} width={32} />
+              <span className={cn("font-bold text-white", tektur.className)}>
+                I MOVIES
+              </span>
+            </Link>
+          </SheetHeader>
+          <div className="mt-0.5 flex h-full w-full flex-col">{children}</div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
   if (isMobile) {
     return (
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
@@ -187,7 +234,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
-          className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
+          className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) gap-0 p-0 [&>button]:hidden"
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
@@ -195,9 +242,22 @@ function Sidebar({
           }
           side={side}
         >
-          <SheetHeader className="sr-only">
-            <SheetTitle>Sidebar</SheetTitle>
-            <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+          <SheetHeader className="mt-0.5 flex flex-row gap-0 p-2">
+            <SheetTitle className="sr-only">Title</SheetTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="-ml-0.5 bg-transparent"
+              onClick={() => setOpenMobile(false)}
+            >
+              <IconMenu />
+            </Button>
+            <Link href="/" className="flex items-center justify-center">
+              <Image src="/logo.svg" alt="LOGO" height={32} width={32} />
+              <span className={cn("font-bold text-white", tektur.className)}>
+                I MOVIES
+              </span>
+            </Link>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>
@@ -218,7 +278,7 @@ function Sidebar({
       <div
         data-slot="sidebar-gap"
         className={cn(
-          "relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear",
+          "relative w-(--sidebar-width) bg-transparent transition-[width] duration-100 ease-linear",
           "group-data-[collapsible=offcanvas]:w-0",
           "group-data-[side=right]:rotate-180",
           variant === "floating" || variant === "inset"
@@ -229,7 +289,7 @@ function Sidebar({
       <div
         data-slot="sidebar-container"
         className={cn(
-          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
+          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-100 ease-linear md:flex",
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
@@ -405,7 +465,7 @@ function SidebarGroupLabel({
       data-slot="sidebar-group-label"
       data-sidebar="group-label"
       className={cn(
-        "text-sidebar-foreground/70 ring-sidebar-ring flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        "text-sidebar-foreground/70 ring-sidebar-ring flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium outline-hidden transition-[margin,opacity] duration-100 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
         "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
         className,
       )}

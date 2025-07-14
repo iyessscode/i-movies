@@ -9,6 +9,7 @@ import { convertDataImage } from "@/lib/utils";
 
 import { ButtonScrollTop } from "@/components/button-scroll-top";
 import { GridCard } from "@/components/grid-card";
+import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
 import { Footer } from "@/components/navigation/footer";
 
 export const PeopleView = () => {
@@ -49,7 +50,8 @@ export const PeopleView = () => {
   const dataGrid = convertDataImage({ allData: allPeople });
 
   return (
-    <>
+    <div className="flex flex-col space-y-4">
+      <Breadcrumbs />
       <GridCard linkPrefix="person" items={dataGrid} useBackground={true} />
       <ButtonScrollTop />
       {hasNextPage ? (
@@ -69,6 +71,6 @@ export const PeopleView = () => {
           </>
         )
       )}
-    </>
+    </div>
   );
 };

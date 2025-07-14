@@ -38,6 +38,7 @@ export const MobileSearch = ({
           <Button
             variant="ghost"
             size="icon"
+            className="-ml-2.5"
             onClick={() => setMobileShowResults(false)}
           >
             <IconChevronLeft />

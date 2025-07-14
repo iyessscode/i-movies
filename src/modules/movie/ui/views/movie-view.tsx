@@ -9,6 +9,7 @@ import { convertDataImage } from "@/lib/utils";
 
 import { ButtonScrollTop } from "@/components/button-scroll-top";
 import { GridCard } from "@/components/grid-card";
+import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
 import { Footer } from "@/components/navigation/footer";
 
 type Props = {
@@ -55,7 +56,8 @@ export const MovieView = ({ category }: Props) => {
   const dataGrid = convertDataImage({ allData: allMovies });
 
   return (
-    <>
+    <div className="flex flex-col space-y-4">
+      <Breadcrumbs />
       <GridCard linkPrefix="movie" items={dataGrid} />
       <ButtonScrollTop />
       {hasNextPage ? (
@@ -75,6 +77,6 @@ export const MovieView = ({ category }: Props) => {
           </>
         )
       )}
-    </>
+    </div>
   );
 };
