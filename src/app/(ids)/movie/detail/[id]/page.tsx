@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
+import { IconLoader } from "@/data/icons";
+
 import { MovieIdView } from "@/modules/movie/ui/views/movie-id-view";
 
 type Props = {
@@ -18,7 +20,13 @@ export default async function MovieDetailIdPage({ params }: Props) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense
+        fallback={
+          <div className="flex h-screen items-center justify-center">
+            <IconLoader className="text-primary size-9 animate-spin" />
+          </div>
+        }
+      >
         <MovieIdView id={id} />
       </Suspense>
     </HydrationBoundary>

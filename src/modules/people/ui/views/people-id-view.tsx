@@ -72,7 +72,7 @@ export const PeopleIdView = ({ id }: Props) => {
   return (
     <div className="flex w-full flex-col">
       <Breadcrumbs title={data.name} className="absolute top-2 left-4 z-50" />
-      <div className="p-4 pt-20 lg:px-24">
+      <div className="p-4 md:pt-20 lg:px-24">
         <div className="flex flex-col gap-4 md:grid md:grid-cols-8">
           <div className="col-span-2 mx-auto w-full">
             <div className="flex w-full flex-col items-center justify-center space-y-4">
@@ -152,7 +152,7 @@ export const PeopleIdView = ({ id }: Props) => {
 
 export const PeopleIdViewSkeleton = () => {
   return (
-    <div className="p-4 pt-20 lg:px-24">
+    <div className="p-4 pt-12 md:pt-20 lg:px-24">
       <div className="flex flex-col gap-4 md:grid md:grid-cols-8">
         <div className="col-span-2 mx-auto w-full">
           <div className="flex w-full flex-col items-center justify-center space-y-4">

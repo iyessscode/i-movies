@@ -40,7 +40,7 @@ export const MovieDetailCreditsView = ({ id }: Props) => {
     <div className="flex w-full flex-col">
       <ButtonScrollTop />
       <Breadcrumbs title={data.title} className="absolute top-0 left-4 z-50" />
-      <div className="p-4 pt-20 lg:px-24">
+      <div className="p-4 md:pt-20 lg:px-24">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* CAST */}
           <Container label="Cast">
