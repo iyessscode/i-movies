@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<!-- TODO -->
 
-## Getting Started
+pathname = "/"
+breadcrumbs = "I Movies > Dashboard"
 
-First, run the development server:
+<!-- MOVIE -->
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+pathname = "/movie"
+breadcrumbs = "I Movies > Movies"
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+pathname = "/movie/popular"
+breadcrumbs = "I Movies > Movies > Popular"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+pathname = "/movie/popular"
+breadcrumbs = "I Movies > Movies > Popular"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+pathname = "/movie/now-playing"
+breadcrumbs = "I Movies > Movies > Now Playing"
 
-## Learn More
+pathname = "/movie/top-rated"
 
-To learn more about Next.js, take a look at the following resources:
+pathname = "/movie/Upcoming"
+breadcrumbs = "I Movies > Movies > Upcoming"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+pathname = "/movie/detail/166428"
+breadcrumbs = "I Movies > Movies > How to Train Your Dragon: The Hidden World (2019)"
+NOTES: remove "/detail" and replace movieId with title
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+<!-- TV -->
 
-## Deploy on Vercel
+pathname = "/tv"
+breadcrumbs = "I Movies > TV Shows"
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+pathname = "/tv/popular"
+breadcrumbs = "I Movies > TV Shows > Popular"
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+pathname = "/tv/on-the-air"
+breadcrumbs = "I Movies > TV Shows > On TV"
+
+pathname = "/tv/airing-today"
+breadcrumbs = "I Movies > TV Shows > Airing Today"
+
+pathname = "/tv/top-rated"
+breadcrumbs = "I Movies > TV Shows > Top Rated"
+
+pathname = "/tv/detail/63770"
+breadcrumbs = "I Movies > TV Shows > The Late Show with Stephen Colbert (2015)"
+NOTES: remove "/detail" and replace TvId with name
+
+<!-- PEOPLE -->
+
+pathname = "/people"
+breadcrumbs = "I Movies > People"
+
+pathname = "/people/detail/974169"
+breadcrumbs = "I Movies > People > Jenna Ortega"
+NOTES: remove "/detail" and replace PeopleId with name
