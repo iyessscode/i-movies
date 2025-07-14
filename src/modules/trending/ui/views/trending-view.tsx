@@ -51,7 +51,7 @@ export const TrendingView = ({ category }: Props) => {
   const dataGrid = convertDataImage({ allData: allData });
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col">
       <Breadcrumbs />
       <GridCard linkPrefix={category} items={dataGrid} />
       <ButtonScrollTop />

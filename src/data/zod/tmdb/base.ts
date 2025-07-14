@@ -56,23 +56,23 @@ export const BaseSpokenLanguageSchema = z.object({
 
 const BaseCreditSchema = z.object({
   adult: z.boolean(),
-  gender: z.number().nullable(),
-  id: z.number(),
+  gender: z.number().default(0),
+  id: z.number().default(0),
   known_for_department: z.string(),
   name: z.string(),
   original_name: z.string(),
-  popularity: z.number(),
+  popularity: z.number().default(0),
   profile_path: z.string().nullable(),
   credit_id: z.string(),
 });
 
-const BaseCastSchema = BaseCreditSchema.extend({
+export const BaseCastSchema = BaseCreditSchema.extend({
   cast_id: z.number(),
   character: z.string(),
   order: z.number(),
 });
 
-const BaseCrewSchema = BaseCreditSchema.extend({
+export const BaseCrewSchema = BaseCreditSchema.extend({
   department: z.string(),
   job: z.string(),
 });

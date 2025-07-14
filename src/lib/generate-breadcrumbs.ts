@@ -8,6 +8,35 @@ type BreadcrumbItem = {
   icon?: React.ComponentType<{ className?: string }>;
 };
 
+const getSectionLabel = (section: string, isPlural: boolean) => {
+  switch (section) {
+    case "movie":
+      return isPlural ? "Movies" : "Movie";
+    case "tv":
+      return isPlural ? "TV Shows" : "TV Show";
+    case "people":
+      return isPlural ? "People" : "Person";
+    default:
+      return section;
+  }
+};
+
+const getSubpageLabel = (subpage: string) => {
+  switch (subpage) {
+    case "credits":
+      return "Full Cast & Crew";
+    case "media":
+      return "Media";
+    case "similar":
+      return "Similar";
+    default:
+      return subpage
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+  }
+};
+
 export const generateBreadcrumbs = (
   pathname: string,
   title?: string,
@@ -17,6 +46,7 @@ export const generateBreadcrumbs = (
   const paths = pathname.split("/").filter((path) => path !== "");
   const crumbs: BreadcrumbItem[] = [];
 
+  // Always add Home with icon
   crumbs.push({
     href: "/",
     label: "Home",
@@ -24,51 +54,72 @@ export const generateBreadcrumbs = (
     icon: IconHome,
   });
 
-  const allMenuItems = [
+  if (paths.length === 0) return crumbs;
+
+  const section = paths[0];
+  const menuItem = [
     ...menuSections.publicSection,
     ...menuSections.privateSection,
-  ];
+  ].find((item) => item.url === `/${section}`);
 
-  let currentPath = "";
-  for (let i = 0; i < paths.length; i++) {
-    currentPath += `/${paths[i]}`;
-    const matchedItem = allMenuItems.find((item) => item.url === currentPath);
+  // Handle base section (e.g., /movie, /tv, /people)
+  if (paths.length === 1) {
+    crumbs.push({
+      href: `/${section}`,
+      label: `Trending ${getSectionLabel(section, true)}`, // Plural
+      isCurrent: true,
+      icon: menuItem?.icon,
+    });
+    return crumbs;
+  }
 
-    if (i === 1 && paths[0] === "movie" && paths[1] === "detail" && title) {
+  // Add section link - singular when in detail path
+  const isDetailPath = paths.length >= 3 && paths[1] === "detail";
+  crumbs.push({
+    href: `/${section}`,
+    label: getSectionLabel(section, !isDetailPath), // Plural unless detail path
+    isCurrent: false,
+    icon: menuItem?.icon,
+  });
+
+  // Handle detail pages (e.g., /movie/detail/123)
+  if (isDetailPath) {
+    if (title) {
       crumbs.push({
+        href: `/${section}/detail/${paths[2]}`,
         label: title,
-        isCurrent: true,
+        isCurrent: paths.length === 3,
       });
-      break;
     }
 
-    if (matchedItem) {
+    // Handle subpages (e.g., /movie/detail/123/credits)
+    if (paths.length === 4) {
       crumbs.push({
-        href: matchedItem.url,
-        label: matchedItem.label,
-        isCurrent: i === paths.length - 1,
-        icon:
-          i === paths.length - 1 ? matchedItem.iconActive : matchedItem.icon,
+        label: getSubpageLabel(paths[3]),
+        isCurrent: true,
       });
+    }
+    return crumbs;
+  }
 
-      if (matchedItem.subItems && i < paths.length - 1) {
-        const subPath = currentPath + `/${paths[i + 1]}`;
-        const matchedSubItem = matchedItem.subItems.find(
-          (item) => item.url === subPath,
-        );
+  // Handle other paths (e.g., /movie/popular)
+  if (paths.length === 2) {
+    const subItem = menuItem?.subItems?.find(
+      (item) => item.url === `/${section}/${paths[1]}`,
+    );
 
-        if (matchedSubItem) {
-          crumbs.push({
-            href: matchedSubItem.url,
-            label: matchedSubItem.label,
-            isCurrent: i + 1 === paths.length - 1,
-          });
-          i++;
-        }
-      }
-    } else if (i === paths.length - 1 && title) {
+    if (subItem) {
       crumbs.push({
-        label: title,
+        href: subItem.url,
+        label: subItem.label,
+        isCurrent: true,
+      });
+    } else {
+      crumbs.push({
+        label: paths[1]
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" "),
         isCurrent: true,
       });
     }

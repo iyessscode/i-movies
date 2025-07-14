@@ -43,7 +43,7 @@ export const CardImage = ({
     <Card
       className={cn(
         "gap-0 border-0 bg-transparent p-0",
-        useBackground && "size-full border-1 bg-transparent",
+        useBackground && "bg-card size-full border",
       )}
     >
       <Link href={url} className="group" prefetch>
@@ -81,7 +81,7 @@ export const CardImage = ({
       >
         <Link
           href={url}
-          className="text-foreground hover:text-primary text-base font-semibold transition-colors duration-150 ease-out"
+          className="text-foreground hover:text-primary line-clamp-2 text-base font-semibold transition-colors duration-150 ease-out"
           aria-label={title}
           title={title}
           prefetch

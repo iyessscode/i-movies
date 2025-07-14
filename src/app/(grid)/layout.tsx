@@ -14,7 +14,7 @@ export default function GridLayout({ children }: RootLayoutProps) {
         <div className="flex flex-1">
           <AppSidebar collapsible="icon" />
           <SidebarInset className="min-h-screen">
-            <div className="flex flex-1 flex-col p-4">{children}</div>
+            <div className="flex flex-1 flex-col px-4">{children}</div>
           </SidebarInset>
         </div>
       </SidebarProvider>

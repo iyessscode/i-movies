@@ -65,7 +65,6 @@ export const tvRouter = createTRPCRouter({
           });
         }
 
-        // await new Promise((resolve) => setTimeout(resolve, 5000));
 
         return tvData;
       } catch (error) {

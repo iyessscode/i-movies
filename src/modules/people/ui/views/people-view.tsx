@@ -50,7 +50,7 @@ export const PeopleView = () => {
   const dataGrid = convertDataImage({ allData: allPeople });
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col">
       <Breadcrumbs />
       <GridCard linkPrefix="person" items={dataGrid} useBackground={true} />
       <ButtonScrollTop />

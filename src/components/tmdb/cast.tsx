@@ -24,7 +24,7 @@ export const Cast = ({ id, linkPrefix, cast }: Props) => {
   return (
     <CarouselWrapper
       label="Top Billed Cast"
-      linkShowMore={`/${linkPrefix}/${id}/credits`}
+      linkShowMore={`/${linkPrefix}/detail/${id}/credits`}
       labelShowMore="Full Cast & Crew"
     >
       {castToDisplay.map((people, index) => (

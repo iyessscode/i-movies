@@ -55,7 +55,7 @@ export const TvView = ({ category }: Props) => {
 
   const dataGrid = convertDataImage({ allData: allTvShow });
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col">
       <Breadcrumbs />
       <GridCard linkPrefix="tv" items={dataGrid} />
       <ButtonScrollTop />

@@ -45,7 +45,7 @@ export const MovieIdView = ({ id }: Props) => {
 
   return (
     <div className="flex w-full flex-col">
-      <Breadcrumbs title={data.title} className="absolute top-2 left-4 z-50" />
+      <Breadcrumbs title={data.title} className="absolute top-0 left-4 z-50" />
       <Banner
         backdrop={data.backdrop_path}
         poster={data.poster_path}
@@ -64,7 +64,7 @@ export const MovieIdView = ({ id }: Props) => {
         )}
         trailerKey={trailerKey}
       />
-      <div className="z-50 container flex flex-col items-center justify-center gap-y-5 px-4 md:mx-auto">
+      <div className="z-50 container flex max-w-[1200px] flex-col items-center justify-center gap-y-5 px-4 md:mx-auto">
         <ButtonScrollTop />
         <Cast id={data.id} linkPrefix="movie" cast={data.credits.cast} />
         <MovieDetailInfo movie={data} />

@@ -8,8 +8,11 @@ import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { convertDataImage } from "@/lib/utils";
 
 import { ButtonScrollTop } from "@/components/button-scroll-top";
-import { GridCard } from "@/components/grid-card";
-import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
+import { GridCard, GridCardSkeleton } from "@/components/grid-card";
+import {
+  Breadcrumbs,
+  BreadcrumbsSkeleton,
+} from "@/components/navigation/breadcrumbs";
 import { Footer } from "@/components/navigation/footer";
 
 type Props = {
@@ -56,9 +59,9 @@ export const MovieView = ({ category }: Props) => {
   const dataGrid = convertDataImage({ allData: allMovies });
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col">
       <Breadcrumbs />
-      <GridCard linkPrefix="movie" items={dataGrid} />
+      <GridCard useBackground linkPrefix="movie" items={dataGrid} />
       <ButtonScrollTop />
       {hasNextPage ? (
         <div ref={loadMoreRef} className="flex justify-center py-4">

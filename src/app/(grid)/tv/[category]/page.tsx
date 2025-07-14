@@ -3,8 +3,7 @@ import { Suspense } from "react";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import { GridCardSkeleton } from "@/components/grid-card";
-
+import { GridViewSkeleton } from "@/modules/grid-view-skeleton";
 import { TvView } from "@/modules/tv/ui/views/tv-view";
 
 type Props = {
@@ -24,7 +23,7 @@ export default async function TvCategoryPage({ params }: Props) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<GridCardSkeleton />}>
+      <Suspense fallback={<GridViewSkeleton />}>
         <TvView category={category} />
       </Suspense>
     </HydrationBoundary>

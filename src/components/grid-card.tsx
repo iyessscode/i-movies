@@ -20,7 +20,7 @@ export const GridCard = ({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+    <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-5">
       {items.map((item, index) => {
         return (
           <div key={`${item.id} - ${index}`} className="w-full">
@@ -44,7 +44,7 @@ export const GridCard = ({
 
 export const GridCardSkeleton = ({ length = 15 }: { length?: number }) => {
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+    <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-5">
       {Array.from({ length: length }).map((_, index) => (
         <div key={index} className="w-full">
           <CardImageSkeleton />

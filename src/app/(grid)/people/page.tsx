@@ -3,8 +3,7 @@ import { Suspense } from "react";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import { GridCardSkeleton } from "@/components/grid-card";
-
+import { GridViewSkeleton } from "@/modules/grid-view-skeleton";
 import { PeopleView } from "@/modules/people/ui/views/people-view";
 
 export default async function PeoplePage() {
@@ -15,7 +14,7 @@ export default async function PeoplePage() {
   );
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<GridCardSkeleton />}>
+      <Suspense fallback={<GridViewSkeleton />}>
         <PeopleView />
       </Suspense>
     </HydrationBoundary>

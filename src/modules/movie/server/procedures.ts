@@ -3,7 +3,10 @@ import z from "zod";
 import { createTRPCRouter, publicProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
-import { MovieListResponseSchema } from "@/data/zod/tmdb";
+import {
+  MovieCreditsResponseSchema,
+  MovieListResponseSchema,
+} from "@/data/zod/tmdb";
 import { PickMovieFullDetail } from "@/data/zod/tmdb/movie";
 
 const API_URL = process.env.TMDB_API_URL;
@@ -63,8 +66,6 @@ export const movieRouter = createTRPCRouter({
             cause: error.issues,
           });
         }
-
-        // await new Promise((resolve) => setTimeout(resolve, 5000));
 
         return movieData;
       } catch (error) {
@@ -192,6 +193,73 @@ export const movieRouter = createTRPCRouter({
         }
 
         return movieDetailData;
+      } catch (error) {
+        let errorMessage = "An unknown error occurred.";
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === "string") {
+          errorMessage = error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Internal Server Error",
+          cause: errorMessage,
+        });
+      }
+    }),
+
+  getCredits: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      try {
+        const [movieResponse, creditsResponse] = await Promise.all([
+          fetch(`${API_URL}/movie/${input.id}`, options),
+          fetch(`${API_URL}/movie/${input.id}/credits`, options),
+        ]);
+
+        if (!movieResponse.ok) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Failed to fetch movie details from TMDB",
+            cause: await movieResponse.text(),
+          });
+        }
+        if (!creditsResponse.ok) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Failed to fetch movie credits from TMDB",
+            cause: await creditsResponse.text(),
+          });
+        }
+
+        const movieData = await movieResponse.json();
+        const creditsData = await creditsResponse.json();
+
+        const combinedData = {
+          ...creditsData,
+          title: movieData.title,
+        };
+
+        const {
+          success,
+          error,
+          data: movieCreditsData,
+        } = MovieCreditsResponseSchema.safeParse(combinedData);
+
+        if (!success) {
+          console.error("🚀[ERROR]: ", error.issues);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to parse movie data from TMDB",
+            cause: error.issues,
+          });
+        }
+
+        return movieCreditsData;
       } catch (error) {
         let errorMessage = "An unknown error occurred.";
         if (error instanceof Error) {

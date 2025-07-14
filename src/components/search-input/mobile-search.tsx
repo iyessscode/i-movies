@@ -51,7 +51,7 @@ export const MobileSearch = ({
               onChange={handleInputChange}
               className="bg-background pr-16"
             />
-            <div className="absolute top-1/2 right-0 -translate-y-1/2">
+            <div className="absolute top-1/2 right-0 flex -translate-y-1/2 items-center justify-center">
               <Button
                 ref={clearSearchInputRef}
                 variant="ghost"
@@ -69,6 +69,7 @@ export const MobileSearch = ({
                 variant="ghost"
                 size="icon"
                 onClick={handleSearch}
+                disabled={query.length === 0}
                 className="border-0 bg-transparent"
               >
                 <IconSearch />

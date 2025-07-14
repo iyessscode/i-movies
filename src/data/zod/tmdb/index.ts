@@ -1,6 +1,8 @@
 import z from "zod";
 
 import {
+  BaseCastSchema,
+  BaseCrewSchema,
   BaseGenreSchema,
   PickCast,
   PickCrew,
@@ -63,6 +65,13 @@ export const MediaListResponseSchema = z.object({
   results: z.array(MediaWithMediaTypeSchema),
   total_pages: z.number().int().nonnegative(),
   total_results: z.number().int().nonnegative(),
+});
+
+export const MovieCreditsResponseSchema = z.object({
+  id: z.number().default(0),
+  title: z.string(),
+  cast: z.array(BaseCastSchema),
+  crew: z.array(BaseCrewSchema),
 });
 
 export type TPickMovieList = z.infer<typeof PickMovieList>;

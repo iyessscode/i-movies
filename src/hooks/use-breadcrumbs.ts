@@ -1,7 +1,9 @@
-// hooks/use-breadcrumbs.ts
-import { generateBreadcrumbs } from "@/lib/generate-breadcrumbs";
+"use client";
+
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+
+import { generateBreadcrumbs } from "@/lib/generate-breadcrumbs";
 
 export const useBreadcrumbs = (title?: string) => {
   const pathname = usePathname();

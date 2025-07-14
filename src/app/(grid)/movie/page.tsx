@@ -3,8 +3,7 @@ import { Suspense } from "react";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import { GridCardSkeleton } from "@/components/grid-card";
-
+import { GridViewSkeleton } from "@/modules/grid-view-skeleton";
 import { TrendingView } from "@/modules/trending/ui/views/trending-view";
 
 export default async function MoviePage() {
@@ -18,7 +17,7 @@ export default async function MoviePage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<GridCardSkeleton />}>
+      <Suspense fallback={<GridViewSkeleton />}>
         <TrendingView category="movie" />
       </Suspense>
     </HydrationBoundary>
