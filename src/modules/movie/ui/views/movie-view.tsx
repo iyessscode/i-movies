@@ -8,11 +8,8 @@ import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { convertDataImage } from "@/lib/utils";
 
 import { ButtonScrollTop } from "@/components/button-scroll-top";
-import { GridCard, GridCardSkeleton } from "@/components/grid-card";
-import {
-  Breadcrumbs,
-  BreadcrumbsSkeleton,
-} from "@/components/navigation/breadcrumbs";
+import { GridCard } from "@/components/grid-card";
+import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
 import { Footer } from "@/components/navigation/footer";
 
 type Props = {

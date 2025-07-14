@@ -12,7 +12,6 @@ import {
   SearchResultsSkeleton,
 } from "@/components/search-input/search-results";
 import { Button } from "@/components/ui/button";
-import { useScrollVisible } from "@/hooks/use-scroll-visible";
 
 export const SearchInput = () => {
   const {
