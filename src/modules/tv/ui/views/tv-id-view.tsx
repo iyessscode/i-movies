@@ -45,6 +45,7 @@ export const TvIdView = ({ id }: Props) => {
 
   return (
     <div className="flex w-full flex-col">
+      <ButtonScrollTop/>
       <Breadcrumbs title={data.name} className="absolute top-0 left-4 z-50" />
       <Banner
         backdrop={data.backdrop_path}

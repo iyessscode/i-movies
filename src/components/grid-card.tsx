@@ -3,7 +3,7 @@ import { TImageCard, TLinkPrefix } from "@/data/types";
 import { CardImage, CardImageSkeleton } from "@/components/card/card-image";
 
 type Props = {
-  linkPrefix: TLinkPrefix;
+  linkPrefix?: TLinkPrefix;
   items: TImageCard[];
   imagePriority?: number;
   useBackground?: boolean;
@@ -22,12 +22,14 @@ export const GridCard = ({
   return (
     <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-5">
       {items.map((item, index) => {
+        const linkPref = linkPrefix ? linkPrefix : "movie";
+        const url = item.mediaType ? item.mediaType : linkPref;
         return (
           <div key={`${item.id} - ${index}`} className="w-full">
             <CardImage
               key={item.id}
               id={item.id}
-              linkPrefix={linkPrefix}
+              linkPrefix={url}
               imageUrl={item.imageUrl}
               title={item.title}
               description={item.description}

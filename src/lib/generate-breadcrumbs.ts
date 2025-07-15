@@ -64,12 +64,21 @@ export const generateBreadcrumbs = (
 
   // Handle base section (e.g., /movie, /tv, /people)
   if (paths.length === 1) {
-    crumbs.push({
-      href: `/${section}`,
-      label: `Trending ${getSectionLabel(section, true)}`, // Plural
-      isCurrent: true,
-      icon: menuItem?.icon,
-    });
+    if (section === "advance-search") {
+      crumbs.push({
+        href: `/${section}`,
+        label: getSectionLabel(section, true), // Plural
+        isCurrent: true,
+        icon: menuItem?.icon,
+      });
+    } else {
+      crumbs.push({
+        href: `/${section}`,
+        label: `Trending ${getSectionLabel(section, true)}`, // Plural
+        isCurrent: true,
+        icon: menuItem?.icon,
+      });
+    }
     return crumbs;
   }
 

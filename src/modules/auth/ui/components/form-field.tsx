@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 type FormFieldProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
-  label: string;
+  label?: string;
   placeholder?: string;
   type?: "text" | "email" | "password" | "file";
 };
@@ -32,14 +32,16 @@ export const FormField = <T extends FieldValues>({
       control={control}
       render={({ field, fieldState }) => (
         <FormItem>
-          <FormLabel
-            className={cn(
-              "pl-2 font-normal",
-              fieldState.error && "text-destructive",
-            )}
-          >
-            {label}
-          </FormLabel>
+          {label && (
+            <FormLabel
+              className={cn(
+                "pl-2 font-normal",
+                fieldState.error && "text-destructive",
+              )}
+            >
+              {label}
+            </FormLabel>
+          )}
           <FormControl>
             <Input
               type={type}

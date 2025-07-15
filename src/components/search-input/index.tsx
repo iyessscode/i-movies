@@ -1,9 +1,9 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 
 import { IconSearch } from "@/data/icons";
-import { useSearchLogic } from "@/hooks/use-search-logic";
+import { useSearch } from "@/hooks/use-search";
 
 import { DesktopSearch } from "@/components/search-input/desktop-search";
 import { MobileSearch } from "@/components/search-input/mobile-search";
@@ -16,89 +16,41 @@ import { Button } from "@/components/ui/button";
 export const SearchInput = () => {
   const {
     query,
+    isFocused,
+    setIsFocused,
+    isOpenMobile,
+    setIsOpenMobile,
     isDebouncing,
-    debouncedSearch,
-    showResults,
-    setShowResults,
-    mobileShowResults,
-    desktopShowResults,
-    setDesktopShowResults,
-    setMobileShowResults,
-    searchInputRef,
-    clearSearchInputRef,
-    searchButtonRef,
+    debouncedQuery,
+    inputRef,
+    formRef,
     resultsRef,
-    desktopSearchInputRef,
-    handleInputChange,
-    handleSearch,
+    handleSubmit,
     handleClear,
-  } = useSearchLogic();
-
-  useEffect(() => {
-    if (mobileShowResults && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [mobileShowResults, searchInputRef]);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as Node;
-
-      const protectedElements = [
-        searchInputRef.current,
-        clearSearchInputRef.current,
-        searchButtonRef.current,
-        resultsRef.current,
-        document.querySelector(".desktop-results-container"),
-      ].filter(Boolean);
-
-      const isOutsideClick =
-        (mobileShowResults || desktopShowResults) &&
-        protectedElements.every((el) => !el?.contains(target));
-
-      if (isOutsideClick) {
-        setMobileShowResults(false);
-        setDesktopShowResults(false);
-        setShowResults(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [
-    clearSearchInputRef,
-    resultsRef,
-    searchButtonRef,
-    searchInputRef,
-    setDesktopShowResults,
-    setMobileShowResults,
-    setShowResults,
-    mobileShowResults,
-    desktopShowResults,
-  ]);
+    handleInputChange,
+  } = useSearch();
 
   return (
     <div className="relative">
       <DesktopSearch
+        formRef={formRef}
+        handleSubmit={handleSubmit}
+        inputRef={inputRef}
         query={query}
         handleInputChange={handleInputChange}
+        isFocused={() => setIsFocused(true)}
         handleClear={handleClear}
-        handleSearch={handleSearch}
-        showResults={desktopShowResults}
-        searchInputRef={searchInputRef}
-        clearSearchInputRef={clearSearchInputRef}
-        searchButtonRef={searchButtonRef}
-        desktopSearchInputRef={desktopSearchInputRef}
+        resultsRef={resultsRef}
       >
         <Suspense fallback={<SearchResultsSkeleton />}>
           {isDebouncing && query ? (
             <SearchResultsSkeleton />
           ) : (
-            showResults && (
+            isFocused &&
+            query.length !== 0 && (
               <SearchResults
-                resultsRef={resultsRef}
-                searchQuery={debouncedSearch}
-                handleSearch={handleSearch}
+                query={debouncedQuery}
+                handleSubmit={handleSubmit}
               />
             )
           )}
@@ -109,32 +61,34 @@ export const SearchInput = () => {
         variant="ghost"
         size="icon"
         className="md:hidden"
-        onClick={() => setMobileShowResults(true)}
+        onClick={() => setIsOpenMobile(true)}
       >
         <IconSearch />
       </Button>
 
-      {mobileShowResults && (
+      {isOpenMobile && (
         <MobileSearch
+          setIsOpenMobile={() => setIsOpenMobile(false)}
+          formRef={formRef}
+          handleSubmit={handleSubmit}
+          inputRef={inputRef}
           query={query}
           handleInputChange={handleInputChange}
+          isFocused={() => setIsFocused(true)}
           handleClear={handleClear}
-          handleSearch={handleSearch}
-          showResults={showResults}
-          setMobileShowResults={setMobileShowResults}
-          searchInputRef={searchInputRef}
-          clearSearchInputRef={clearSearchInputRef}
-          searchButtonRef={searchButtonRef}
+          resultsRef={resultsRef}
         >
           <Suspense fallback={<SearchResultsSkeleton />}>
             {isDebouncing && query ? (
               <SearchResultsSkeleton />
             ) : (
-              <SearchResults
-                resultsRef={resultsRef}
-                searchQuery={debouncedSearch}
-                handleSearch={handleSearch}
-              />
+              isFocused &&
+              query.length !== 0 && (
+                <SearchResults
+                  query={debouncedQuery}
+                  handleSubmit={handleSubmit}
+                />
+              )
             )}
           </Suspense>
         </MobileSearch>

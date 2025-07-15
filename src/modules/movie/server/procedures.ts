@@ -67,6 +67,16 @@ export const movieRouter = createTRPCRouter({
           });
         }
 
+        if (movieData.dates) {
+          const minDate = new Date(movieData.dates.minimum);
+          const maxDate = new Date(movieData.dates.maximum);
+
+          movieData.results = movieData.results.filter((movie) => {
+            const releaseDate = new Date(movie.release_date);
+            return releaseDate >= minDate && releaseDate <= maxDate;
+          });
+        }
+
         return movieData;
       } catch (error) {
         let errorMessage = "An unknown error occurred.";

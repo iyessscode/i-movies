@@ -1,34 +1,33 @@
 "use client";
 
 import { IconChevronLeft, IconSearch, IconX } from "@/data/icons";
-import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 type Props = {
+  setIsOpenMobile: () => void;
+  formRef: React.RefObject<HTMLFormElement>;
+  handleSubmit: (e: React.FormEvent) => void;
+  inputRef: React.RefObject<HTMLInputElement>;
   query: string;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isFocused: () => void;
   handleClear: () => void;
-  handleSearch: () => void;
-  showResults: boolean;
-  setMobileShowResults: (show: boolean) => void;
-  searchInputRef: React.RefObject<HTMLInputElement>;
-  clearSearchInputRef: React.RefObject<HTMLButtonElement>;
-  searchButtonRef: React.RefObject<HTMLButtonElement>;
+  resultsRef: React.RefObject<HTMLDivElement>;
   children: React.ReactNode;
 };
 
 export const MobileSearch = ({
+  setIsOpenMobile,
+  formRef,
+  handleSubmit,
+  inputRef,
   query,
   handleInputChange,
+  isFocused,
   handleClear,
-  handleSearch,
-  showResults,
-  setMobileShowResults,
-  searchInputRef,
-  clearSearchInputRef,
-  searchButtonRef,
+  resultsRef,
   children,
 }: Props) => {
   return (
@@ -39,45 +38,53 @@ export const MobileSearch = ({
             variant="ghost"
             size="icon"
             className="-ml-2.5"
-            onClick={() => setMobileShowResults(false)}
+            onClick={setIsOpenMobile}
           >
             <IconChevronLeft />
           </Button>
-          <div className="relative w-full">
+          <form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            className="relative w-full"
+          >
             <Input
-              placeholder="Search..."
-              ref={searchInputRef}
+              ref={inputRef}
+              placeholder="Search movies, TV shows, People..."
               value={query}
               onChange={handleInputChange}
-              className="bg-background pr-16"
+              onFocus={isFocused}
+              className="bg-background pr-16 placeholder:font-semibold placeholder:tracking-wide placeholder:text-neutral-500 placeholder:italic"
+              aria-label="Search"
             />
             <div className="absolute top-1/2 right-0 flex -translate-y-1/2 items-center justify-center">
+              {query && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleClear}
+                  className="hover:text-primary border-0 bg-transparent hover:bg-transparent"
+                  aria-label="Clear search"
+                >
+                  <IconX className="h-4 w-4" />
+                </Button>
+              )}
               <Button
-                ref={clearSearchInputRef}
+                type="submit"
                 variant="ghost"
                 size="icon"
-                onClick={handleClear}
-                className={cn(
-                  "border-0 bg-transparent",
-                  query.length === 0 && "hidden",
-                )}
+                disabled={!query.trim()}
+                className="hover:text-primary border-0 bg-transparent hover:bg-transparent"
+                aria-label="Submit search"
               >
-                <IconX />
-              </Button>
-              <Button
-                ref={searchButtonRef}
-                variant="ghost"
-                size="icon"
-                onClick={handleSearch}
-                disabled={query.length === 0}
-                className="border-0 bg-transparent"
-              >
-                <IconSearch />
+                <IconSearch className="h-4 w-4" />
               </Button>
             </div>
-          </div>
+          </form>
         </div>
-        {showResults && <div className="w-full">{children}</div>}
+        <div ref={resultsRef} className="w-full">
+          {children}
+        </div>
       </div>
     </div>
   );

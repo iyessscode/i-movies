@@ -6,14 +6,6 @@ import { IconStar } from "@/data/icons";
 import { TMovieListWithCast } from "@/data/zod/tmdb";
 
 import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import {
@@ -53,22 +45,6 @@ export const PeopleKnownFor = ({ items }: Props) => {
 
   return (
     <section className="container flex flex-col space-y-4">
-      <header className="relative flex w-full items-center justify-between">
-        <h3 className="border-l-primary border-l-4 px-4 text-base font-semibold md:text-lg lg:text-xl">
-          Acting
-        </h3>
-        <Select>
-          <SelectTrigger className="w-32">
-            <SelectValue placeholder="All" />
-          </SelectTrigger>
-          <SelectContent className="bg-background">
-            <SelectGroup>
-              <SelectItem value="movie">Movie</SelectItem>
-              <SelectItem value="tv">TV Shows</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </header>
       <main className="relative mt-4 text-sm md:text-base">
         <Card className="overflow-hidden p-0">
           <Table>
@@ -89,9 +65,9 @@ export const PeopleKnownFor = ({ items }: Props) => {
                           </h4>
                           <Separator orientation="vertical" className="h-6" />
                           <div className="flex w-full flex-col gap-2">
-                            {yearItems.map((item) => (
+                            {yearItems.map((item, index) => (
                               <div
-                                key={item.id}
+                                key={`${item.id} - ${index}`}
                                 className="group flex items-center gap-4"
                               >
                                 <div className="text-muted-foreground min-w-[20px]">
@@ -101,7 +77,7 @@ export const PeopleKnownFor = ({ items }: Props) => {
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <Link
-                                        href={`/movie/${item.id}`}
+                                        href={`/movie/detail/${item.id}`}
                                         className="hover:text-primary font-medium"
                                       >
                                         {item.title}

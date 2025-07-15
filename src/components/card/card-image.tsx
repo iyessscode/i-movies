@@ -68,7 +68,7 @@ export const CardImage = ({
             fill
             priority={priority}
             sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16.66vw"
-            className="transition-transform duration-200 ease-in hover:scale-105"
+            className="bg-primary/10 transition-transform duration-200 ease-in hover:scale-105"
           />
         </div>
       </Link>
@@ -104,7 +104,7 @@ export const CardImageSkeleton = ({
   isPoster?: boolean;
 }) => {
   return (
-    <Card className="border-primary/10 gap-0 overflow-hidden border-0 p-0">
+    <Card className="bg-background gap-0 overflow-hidden border-0 p-0">
       <div
         className={cn(
           "relative overflow-hidden rounded-lg",

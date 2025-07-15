@@ -134,12 +134,14 @@ const MovieListWithCastSchema = MovieListSchema.extend({
   credit_id: z.string(),
   character: z.string(),
   order: z.number(),
+  media_type: z.string().optional(),
 });
 
 const MovieListWithCrewSchema = MovieListSchema.extend({
   credit_id: z.string(),
   department: z.string(),
   job: z.string(),
+  media_type: z.string().optional(),
 });
 
 export const PickMovieListWithCast = MovieListWithCastSchema.pick({
@@ -152,6 +154,7 @@ export const PickMovieListWithCast = MovieListWithCastSchema.pick({
   vote_average: true,
   character: true,
   order: true,
+  media_type: true,
 });
 
 export const PickMovieListWithCrew = MovieListWithCrewSchema.pick({
@@ -163,4 +166,5 @@ export const PickMovieListWithCrew = MovieListWithCrewSchema.pick({
   vote_average: true,
   department: true,
   job: true,
+  media_type: true,
 });

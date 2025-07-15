@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { IconHome } from "@/data/icons";
 import { useBreadcrumbs } from "@/hooks/use-breadcrumbs";
 import { cn } from "@/lib/utils";
 
@@ -11,8 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { IconHome } from "@/data/icons";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type BreadcrumbsProps = {
   className?: string;

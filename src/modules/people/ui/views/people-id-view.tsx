@@ -17,8 +17,11 @@ import { SocialIcon } from "@/components/social-icon";
 import { Container } from "@/components/tmdb/container";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { ButtonScrollTop } from "@/components/button-scroll-top";
 import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
-import { PeopleKnownFor } from "@/modules/people/ui/components/people-known-for";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { IconFilm, IconTv } from "@/data/icons";
+import { PeopleKnownFor } from "@/modules/people/ui/components/people-known-for-movie";
 import {
   PersonalInfo,
   PersonalInfoSkeleton,
@@ -71,6 +74,7 @@ export const PeopleIdView = ({ id }: Props) => {
 
   return (
     <div className="flex w-full flex-col">
+      <ButtonScrollTop />
       <Breadcrumbs title={data.name} className="absolute top-2 left-4 z-50" />
       <div className="p-4 md:pt-20 lg:px-24">
         <div className="flex flex-col gap-4 md:grid md:grid-cols-8">
@@ -141,7 +145,21 @@ export const PeopleIdView = ({ id }: Props) => {
                 linkPrefix={"movie"}
                 className="basis-1/2 md:basis-1/4 lg:basis-1/6"
               />
-              <PeopleKnownFor items={data.movie_credits.cast} />
+              <Tabs defaultValue="movie">
+                <TabsList className="space-x-4">
+                  <TabsTrigger value="movie">
+                    <IconFilm />
+                    <span>Movies</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="password">
+                    <IconTv />
+                    <span>TV Shows</span>
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="movie">
+                  <PeopleKnownFor items={data.movie_credits.cast} />
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
         </div>

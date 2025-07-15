@@ -21,15 +21,23 @@ export const searchRouter = createTRPCRouter({
     .input(
       z.object({
         query: z.string().default(""),
+        category: z.enum(["multi", "movie", "person", "tv"]).default("multi"),
+        cursor: z.number().default(1),
       }),
     )
     .query(async ({ input }) => {
       const params = new URLSearchParams();
+
       params.append("query", input.query);
+      params.append("page", input.cursor.toString());
+
+      console.log(
+        `API_SEARCH: ${API_URL}/search/${input.category}?${params.toString()}`,
+      );
 
       try {
         const tmdbRes = await fetch(
-          `${API_URL}/search/multi?${params.toString()}`,
+          `${API_URL}/search/${input.category}?${params.toString()}`,
           options,
         );
 

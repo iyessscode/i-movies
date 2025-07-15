@@ -18,34 +18,26 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
-  searchQuery: string;
-  handleSearch: () => void;
-  resultsRef: React.RefObject<HTMLDivElement>;
+  handleSubmit: (e: React.FormEvent) => void;
+  query: string;
 };
 
-export const SearchResults = ({
-  resultsRef,
-  searchQuery,
-  handleSearch,
-}: Props) => {
+export const SearchResults = ({ query, handleSubmit }: Props) => {
   const trpc = useTRPC();
 
   const { data: searchData } = useSuspenseQuery(
     trpc.search.searchQuery.queryOptions({
-      query: searchQuery,
+      query,
     }),
   );
 
   if (searchData.results.length === 0) {
     return (
-      <div
-        ref={resultsRef}
-        className="bg-background border-primary/50 z-50 rounded-md border p-4"
-      >
+      <div className="bg-background border-primary/50 z-50 rounded-md border p-4">
         <Card className="border-background bg-primary/5 z-50 flex h-24 items-center justify-center">
           <h1 className="text-muted-foreground text-center font-bold">
             No results found for{" "}
-            <span className="text-foreground">&quot;{searchQuery}&quot;</span>
+            <span className="text-foreground">&quot;{query}&quot;</span>
           </h1>
         </Card>
       </div>
@@ -112,10 +104,7 @@ export const SearchResults = ({
     });
   return (
     <div className="px-4">
-      <ScrollArea
-        ref={resultsRef}
-        className="bg-background border-primary/50 z-50 max-h-[60vh] overflow-y-auto rounded-md border p-4 [&::-webkit-scrollbar]:hidden"
-      >
+      <ScrollArea className="bg-background border-primary/50 z-50 max-h-[60vh] overflow-y-auto rounded-md border p-4 [&::-webkit-scrollbar]:hidden">
         <div className="flex flex-col items-center justify-center space-y-2">
           {sortingData.map((item, index) => {
             return (
@@ -198,7 +187,7 @@ export const SearchResults = ({
           <div className="flex justify-end pt-2">
             <Button
               variant="link"
-              onClick={handleSearch}
+              onClick={handleSubmit}
               className="hover:text-primary text-muted-foreground h-5 text-sm"
             >
               <span>Show more</span>
