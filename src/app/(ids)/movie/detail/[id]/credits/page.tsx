@@ -22,7 +22,7 @@ export default async function MovieIdCreditsPage({ params }: Props) {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense
         fallback={
-          <div className="flex h-screen items-center justify-center">
+          <div className="absolute flex w-full items-center justify-center">
             <IconLoader className="text-primary size-9 animate-spin" />
           </div>
         }

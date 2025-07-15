@@ -55,10 +55,10 @@ export const TvView = ({ category }: Props) => {
 
   const dataGrid = convertDataImage({ allData: allTvShow });
   return (
-    <div className="flex flex-col">
+    <div className="mx-auto flex max-w-[1280px] flex-col">
+      <ButtonScrollTop />
       <Breadcrumbs />
       <GridCard linkPrefix="tv" items={dataGrid} />
-      <ButtonScrollTop />
       {hasNextPage ? (
         <div ref={loadMoreRef} className="flex justify-center py-4">
           {isFetchingNextPage && (

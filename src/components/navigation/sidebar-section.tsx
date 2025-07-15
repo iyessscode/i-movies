@@ -46,7 +46,12 @@ export const SidebarSection = ({ items }: Props) => {
       <SidebarMenu>
         {items.map((item) =>
           item.subItems ? (
-            <Collapsible key={item.url} className="group/collapsible" asChild>
+            <Collapsible
+              key={item.url}
+              className="group/collapsible"
+              defaultOpen={pathname.startsWith(item.url)}
+              asChild
+            >
               <SidebarMenuSubItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton

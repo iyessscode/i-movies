@@ -14,8 +14,8 @@ export default function GridLayout({ children }: RootLayoutProps) {
         <div className="flex flex-1">
           <AppSidebar collapsible="offcanvas" />
         </div>
-        <SidebarInset className="flex min-h-screen flex-col">
-          <div className="z-0 flex-1 pb-10">{children}</div>
+        <SidebarInset className="flex flex-col">
+          <div className="z-0 flex-1">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </div>

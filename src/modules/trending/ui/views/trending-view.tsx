@@ -51,10 +51,10 @@ export const TrendingView = ({ category }: Props) => {
   const dataGrid = convertDataImage({ allData: allData });
 
   return (
-    <div className="flex flex-col">
+    <div className="mx-auto flex max-w-[1280px] flex-col">
+      <ButtonScrollTop />
       <Breadcrumbs />
       <GridCard linkPrefix={category} items={dataGrid} />
-      <ButtonScrollTop />
       {hasNextPage ? (
         <div ref={loadMoreRef} className="flex justify-center py-4">
           {isFetchingNextPage && (

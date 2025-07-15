@@ -50,10 +50,10 @@ export const PeopleView = () => {
   const dataGrid = convertDataImage({ allData: allPeople });
 
   return (
-    <div className="flex flex-col">
+    <div className="mx-auto flex max-w-[1280px] flex-col">
+      <ButtonScrollTop />
       <Breadcrumbs />
       <GridCard linkPrefix="person" items={dataGrid} useBackground={true} />
-      <ButtonScrollTop />
       {hasNextPage ? (
         <div ref={loadMoreRef} className="flex justify-center py-4">
           {isFetchingNextPage && (

@@ -56,10 +56,10 @@ export const MovieView = ({ category }: Props) => {
   const dataGrid = convertDataImage({ allData: allMovies });
 
   return (
-    <div className="flex flex-col">
-      <Breadcrumbs />
-      <GridCard useBackground linkPrefix="movie" items={dataGrid} />
+    <div className="mx-auto flex max-w-[1280px] flex-col">
       <ButtonScrollTop />
+      <Breadcrumbs />
+      <GridCard linkPrefix="movie" items={dataGrid} />
       {hasNextPage ? (
         <div ref={loadMoreRef} className="flex justify-center py-4">
           {isFetchingNextPage && (

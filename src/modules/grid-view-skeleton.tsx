@@ -3,7 +3,7 @@ import { BreadcrumbsSkeleton } from "@/components/navigation/breadcrumbs";
 
 export const GridViewSkeleton = () => {
   return (
-    <div className="flex flex-col">
+    <div className="mx-auto flex max-w-[1280px] flex-col">
       <BreadcrumbsSkeleton />
       <GridCardSkeleton />
     </div>
