@@ -8,8 +8,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { TMDB_IMAGE } from "@/data/constants";
 import { IconChevronRight, IconStar } from "@/data/icons";
-import { TSearchData } from "@/data/types";
-import { convertGender, formatDate } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -44,72 +42,14 @@ export const SearchResults = ({ query, handleSubmit }: Props) => {
     );
   }
 
-  const sortingData: TSearchData[] = searchData.results
-    .filter((item) => ["movie", "tv", "person"].includes(item.media_type))
-    .sort((a, b) => b.popularity - a.popularity)
-    .map((item) => {
-      switch (item.media_type) {
-        case "movie":
-          return {
-            mediaType: item.media_type,
-            id: item.id,
-            title: item.title,
-            imageUrl: item.poster_path
-              ? `${TMDB_IMAGE}/w92${item.poster_path}`
-              : null,
-            descriptionLeft: item.release_date
-              ? formatDate(item.release_date)
-              : "-",
-            descriptionRight: item.vote_average.toFixed(1),
-            footer: item.overview,
-          };
-        case "tv":
-          return {
-            mediaType: item.media_type,
-            id: item.id,
-            title: item.name,
-            imageUrl: item.poster_path
-              ? `${TMDB_IMAGE}/w92${item.poster_path}`
-              : null,
-            descriptionLeft: item.first_air_date
-              ? formatDate(item.first_air_date)
-              : "-",
-            descriptionRight: item.vote_average.toFixed(1),
-            footer: item.overview,
-          };
-        case "person":
-          return {
-            mediaType: "person",
-            id: item.id,
-            title: item.name,
-            imageUrl: item.profile_path
-              ? `${TMDB_IMAGE}/w92${item.profile_path}`
-              : null,
-            descriptionLeft: convertGender(item.gender),
-            descriptionRight: item.known_for_department
-              ? item.known_for_department
-              : "Not Specified",
-            footer: item.known_for
-              ? item.known_for
-                  .slice(0, 3)
-                  .map((knownItem) =>
-                    knownItem.media_type === "movie"
-                      ? (knownItem as { title: string }).title
-                      : (knownItem as { name: string }).name,
-                  )
-                  .join(", ")
-              : "Not Specified",
-          };
-      }
-    });
   return (
     <div className="px-4">
       <ScrollArea className="bg-background border-primary/50 z-50 max-h-[60vh] overflow-y-auto rounded-md border p-4 [&::-webkit-scrollbar]:hidden">
         <div className="flex flex-col items-center justify-center space-y-2">
-          {sortingData.map((item, index) => {
+          {searchData.results.map((item) => {
             return (
               <Link
-                key={index}
+                key={item.id}
                 href={`/${item.mediaType === "person" ? "people" : item.mediaType}/detail/${item.id}`}
                 className="group w-full"
               >
@@ -117,7 +57,10 @@ export const SearchResults = ({ query, handleSubmit }: Props) => {
                   <Card className="border-primary/10 bg-primary/5 group-hover:border-primary flex w-full flex-row gap-4 p-2">
                     <div className="relative aspect-2/3 w-20 overflow-hidden rounded-lg">
                       <Image
-                        src={item.imageUrl || "/logo.svg"}
+                        src={
+                          `${TMDB_IMAGE}/w500${item.imageUrl.profileUrl}` ||
+                          "/logo.svg"
+                        }
                         alt={item.title}
                         fill
                         sizes="16.66vw"
@@ -132,19 +75,19 @@ export const SearchResults = ({ query, handleSubmit }: Props) => {
                         <li className="flex flex-wrap">
                           <p className="text-muted-foreground/50">
                             {"Gender: "}
-                            <span className="text-muted-foreground">{` ${item.descriptionLeft}`}</span>
+                            <span className="text-muted-foreground">{` ${item.detail.gender}`}</span>
                           </p>
                         </li>
                         <li className="flex flex-row flex-wrap">
                           <p className="text-muted-foreground/50">
                             {"Department: "}
-                            <span className="text-muted-foreground">{` ${item.descriptionRight}`}</span>
+                            <span className="text-muted-foreground">{` ${item.detail.department}`}</span>
                           </p>
                         </li>
                         <li className="flex flex-wrap">
                           <p className="text-muted-foreground/50 line-clamp-1">
                             {"Known For: "}
-                            <span className="text-muted-foreground">{` ${item.footer}`}</span>
+                            <span className="text-muted-foreground">{` ${item.detail.knownFor}`}</span>
                           </p>
                         </li>
                       </ul>
@@ -154,7 +97,10 @@ export const SearchResults = ({ query, handleSubmit }: Props) => {
                   <Card className="border-primary/10 bg-primary/5 group-hover:border-primary flex w-full flex-row gap-4 p-2">
                     <div className="relative aspect-2/3 w-20 overflow-hidden rounded-lg">
                       <Image
-                        src={item.imageUrl || "/logo.svg"}
+                        src={
+                          `${TMDB_IMAGE}/w500${item.imageUrl.posterUrl}` ||
+                          "/logo.svg"
+                        }
                         alt={item.title}
                         fill
                         sizes="100vw"
@@ -166,15 +112,17 @@ export const SearchResults = ({ query, handleSubmit }: Props) => {
                         {item.title}
                       </h1>
                       <div className="text-muted-foreground flex items-center space-x-4 text-sm">
-                        <span>{item.descriptionLeft}</span>
+                        <span>{item.detail.releaseDate}</span>
                         <Separator className="h-full" orientation="vertical" />
                         <span className="flex items-center gap-x-2 text-[#E5DB22]">
                           <IconStar />
-                          {` ${item.descriptionRight}`}
+                          {` ${item.voteAverage}`}
                         </span>
                       </div>
                       <p className="text-muted-foreground/50 line-clamp-3 text-sm">
-                        {item.footer ? item.footer : "No overview"}
+                        {item.detail.overview
+                          ? item.detail.overview
+                          : "No overview"}
                       </p>
                     </div>
                   </Card>

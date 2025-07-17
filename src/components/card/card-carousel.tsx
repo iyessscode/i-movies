@@ -1,8 +1,6 @@
 "use client";
 
-import { TImageCard, TLinkPrefix } from "@/data/types";
 import { useCarousel } from "@/hooks/use-carousel";
-import { formatDate } from "@/lib/utils";
 
 import { CardImage, CardImageSkeleton } from "@/components/card/card-image";
 import { CarouselWrapper } from "@/components/tmdb/carousel-wrapper";
@@ -12,24 +10,27 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TBaseResults } from "@/data/zod/tmdb";
 
 type Props = {
   label: string;
-  linkPrefix: TLinkPrefix;
   linkShowMore?: string;
   labelShowMore?: string;
-  items: TImageCard[];
-  isPoster?: boolean;
+  items: TBaseResults[];
+  imageType?: "poster" | "backdrop" | "profile";
+  descriptionType?: "releaseDate" | "knownFor";
+  priorityLength?: number;
   className?: string;
 };
 
 export const CardCarousel = ({
   label,
-  linkPrefix,
   linkShowMore,
   labelShowMore,
   items,
-  isPoster = true,
+  imageType = "backdrop",
+  descriptionType = "releaseDate",
+  priorityLength = 10,
   className = "basis-1/2 md:basis-1/4",
 }: Props) => {
   if (items.length === 0) return null;
@@ -39,19 +40,36 @@ export const CardCarousel = ({
       labelShowMore={labelShowMore}
       linkShowMore={linkShowMore}
     >
-      {items.map((item, index) => (
-        <CarouselItem key={`${item.id}-${index}`} className={className}>
-          <CardImage
-            linkPrefix={item.mediaType ?? linkPrefix}
-            id={item.id}
-            imageUrl={item.imageUrl}
-            description={item.description && formatDate(item.description)}
-            title={item.title}
-            isPoster={isPoster}
-            voteAverage={item.voteAverage}
-          />
-        </CarouselItem>
-      ))}
+      {items.map((item, index) => {
+        const imageUrl =
+          (imageType === "poster"
+            ? item.imageUrl.posterUrl
+            : imageType === "backdrop"
+              ? item.imageUrl.backdropUrl
+              : item.imageUrl.profileUrl) ?? null;
+        const description =
+          (descriptionType === "releaseDate"
+            ? item.detail.releaseDate
+            : descriptionType === "knownFor"
+              ? item.detail.knownFor
+              : item.detail.overview) ?? null;
+
+        return (
+          <CarouselItem key={`${item.id}-${index}`} className={className}>
+            <CardImage
+              id={item.id}
+              isPoster={false}
+              imageType={imageType}
+              linkPrefix={item.mediaType}
+              imageUrl={imageUrl}
+              title={item.title}
+              description={description}
+              voteAverage={item.voteAverage ? item.voteAverage : undefined}
+              priority={index < priorityLength}
+            />
+          </CarouselItem>
+        );
+      })}
     </CarouselWrapper>
   );
 };

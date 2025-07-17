@@ -3,8 +3,6 @@
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { convertDataImage } from "@/lib/utils";
-
 import { ButtonScrollTop } from "@/components/button-scroll-top";
 import { CardCarousel } from "@/components/card/card-carousel";
 import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
@@ -33,15 +31,6 @@ export const MovieIdView = ({ id }: Props) => {
     (v) => v.type === "Trailer" && v.site === "YouTube",
   );
   const trailerKey = trailer ? trailer.key : null;
-
-  const dataSimilarCarousel = convertDataImage({
-    allData: data.similar.results,
-    isPoster: false,
-  });
-  const dataRecommendationCarousel = convertDataImage({
-    allData: data.recommendations.results,
-    isPoster: false,
-  });
 
   return (
     <div className="flex w-full flex-col">
@@ -79,19 +68,17 @@ export const MovieIdView = ({ id }: Props) => {
         <Reviews id={data.id} reviews={data.reviews.results} />
         <CardCarousel
           label={`Suggestion like "${data.title}"`}
-          linkPrefix="movie"
-          items={dataSimilarCarousel}
+          items={data.similar.results}
+          imageType="backdrop"
           className="basis-4/5 md:basis-1/3 lg:basis-1/4"
-          isPoster={false}
         />
         <CardCarousel
           label="Mybe you also like"
-          linkPrefix="movie"
-          items={dataRecommendationCarousel}
+          items={data.recommendations.results}
+          imageType="backdrop"
           linkShowMore={`/${data.id}/recommendations`}
           labelShowMore="See More"
           className="basis-4/5 md:basis-1/3 lg:basis-1/4"
-          isPoster={false}
         />
       </div>
       <Footer />

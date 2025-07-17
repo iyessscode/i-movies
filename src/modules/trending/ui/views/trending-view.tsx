@@ -3,15 +3,9 @@
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 
-import { IconLoader } from "@/data/icons";
 import { TLinkPrefix } from "@/data/types";
-import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
-import { convertDataImage } from "@/lib/utils";
 
-import { ButtonScrollTop } from "@/components/button-scroll-top";
-import { GridCard } from "@/components/grid-card";
-import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
-import { Footer } from "@/components/navigation/footer";
+import { GridView } from "@/modules/grid-view";
 
 type Props = {
   category: TLinkPrefix;
@@ -42,36 +36,12 @@ export const TrendingView = ({ category }: Props) => {
     ).values(),
   );
 
-  const loadMoreRef = useInfiniteScroll({
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  });
-
-  const dataGrid = convertDataImage({ allData: allData });
-
   return (
-    <div className="mx-auto flex max-w-[1280px] flex-col">
-      <ButtonScrollTop />
-      <Breadcrumbs />
-      <GridCard linkPrefix={category} items={dataGrid} />
-      {hasNextPage ? (
-        <div ref={loadMoreRef} className="flex justify-center py-4">
-          {isFetchingNextPage && (
-            <IconLoader className="text-primary h-8 w-8 animate-spin" />
-          )}
-        </div>
-      ) : (
-        allData.length > 0 &&
-        data.pages[0].total_pages > 1 && (
-          <>
-            <p className="text-muted-foreground py-4 text-center">
-              You&apos;ve reached the end!
-            </p>
-            <Footer />
-          </>
-        )
-      )}
-    </div>
+    <GridView
+      items={allData}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+    />
   );
 };

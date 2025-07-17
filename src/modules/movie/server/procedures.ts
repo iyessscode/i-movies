@@ -5,9 +5,10 @@ import { TRPCError } from "@trpc/server";
 
 import {
   MovieCreditsResponseSchema,
-  MovieListResponseSchema,
+  TMDBResponseSchema,
 } from "@/data/zod/tmdb";
 import { PickMovieFullDetail } from "@/data/zod/tmdb/movie";
+import { ConvertTMDBData } from "@/lib/convert-data";
 
 const API_URL = process.env.TMDB_API_URL;
 
@@ -50,12 +51,13 @@ export const movieRouter = createTRPCRouter({
         }
 
         const data = await tmdbRes.json();
+        const convertData = ConvertTMDBData(data);
 
         const {
           success,
           error,
           data: movieData,
-        } = MovieListResponseSchema.safeParse(data);
+        } = TMDBResponseSchema.safeParse(convertData);
 
         if (!success) {
           console.error(error.issues);
@@ -64,16 +66,6 @@ export const movieRouter = createTRPCRouter({
             message:
               "[MOVIE_ROUTER | GET_MANY]: Failed to parsed MOVIE_LIST from TMDB",
             cause: error.issues,
-          });
-        }
-
-        if (movieData.dates) {
-          const minDate = new Date(movieData.dates.minimum);
-          const maxDate = new Date(movieData.dates.maximum);
-
-          movieData.results = movieData.results.filter((movie) => {
-            const releaseDate = new Date(movie.release_date);
-            return releaseDate >= minDate && releaseDate <= maxDate;
           });
         }
 
@@ -174,8 +166,11 @@ export const movieRouter = createTRPCRouter({
         const videosData = await videosResponse.json();
         const imagesData = await imagesResponse.json();
         const reviewsData = await reviewsResponse.json();
-        const recommendationsData = await recommendationsResponse.json();
         const similarData = await similarResponse.json();
+        const recommendationsData = await recommendationsResponse.json();
+
+        const convertDataSimilar = ConvertTMDBData(similarData);
+        const convertRecommendationsData = ConvertTMDBData(recommendationsData);
 
         const combinedMovieData = {
           ...movieData,
@@ -183,8 +178,8 @@ export const movieRouter = createTRPCRouter({
           videos: videosData,
           images: imagesData,
           reviews: reviewsData,
-          recommendations: recommendationsData,
-          similar: similarData,
+          recommendations: convertRecommendationsData,
+          similar: convertDataSimilar,
         };
 
         const {

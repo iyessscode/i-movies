@@ -3,8 +3,9 @@ import z from "zod";
 import { createTRPCRouter, publicProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
-import { TvListResponseSchema } from "@/data/zod/tmdb";
+import { TMDBResponseSchema } from "@/data/zod/tmdb";
 import { PickTvFullDetail } from "@/data/zod/tmdb/tv";
+import { ConvertTMDBData } from "@/lib/convert-data";
 
 const API_URL = process.env.TMDB_API_URL;
 
@@ -25,7 +26,6 @@ export const tvRouter = createTRPCRouter({
         cursor: z.number().default(1),
       }),
     )
-    .output(TvListResponseSchema)
     .query(async ({ input }) => {
       const params = new URLSearchParams();
       params.append("page", input.cursor.toString());
@@ -39,32 +39,33 @@ export const tvRouter = createTRPCRouter({
         );
 
         if (!tmdbRes.ok) {
-          console.error(`[❌ TV_ROUTER | GET_MANY]: ${tmdbRes.text()}`);
+          console.error(`[❌ TV_ROUTER | GET_LIST]: ${tmdbRes.text()}`);
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "[TV_ROUTER | GET_MANY]: Failed to fetch TMDB",
+            message: "[TV_ROUTER | GET_LIST]: Failed to fetch TMDB",
             cause: tmdbRes.text(),
           });
         }
 
         const data = await tmdbRes.json();
 
+        const convertData = ConvertTMDBData(data);
+
         const {
           success,
           error,
           data: tvData,
-        } = TvListResponseSchema.safeParse(data);
+        } = TMDBResponseSchema.safeParse(convertData);
 
         if (!success) {
           console.error(error.issues);
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message:
-              "[TV_ROUTER | GET_MANY]: Failed to parsed TV_LIST from TMDB",
+              "[TV_ROUTER | GET_LIST]: Failed to parsed TV_LIST from TMDB",
             cause: error.issues,
           });
         }
-
 
         return tvData;
       } catch (error) {
@@ -76,7 +77,7 @@ export const tvRouter = createTRPCRouter({
         }
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "[TV_ROUTER | GET_MANY]: Internal Server Error",
+          message: "[TV_ROUTER | GET_LIST]: Internal Server Error",
           cause: errorMessage,
         });
       }
@@ -107,21 +108,6 @@ export const tvRouter = createTRPCRouter({
           fetch(`${API_URL}/tv/${input.id}/reviews`, options),
           fetch(`${API_URL}/tv/${input.id}/recommendations`, options),
           fetch(`${API_URL}/tv/${input.id}/similar`, options),
-          // Fetch season details for each season
-          // fetch(`${API_URL}/tv/${input.id}`, options).then(async (res) => {
-          //   const showData = await res.json();
-          //   if (showData.seasons) {
-          //     return Promise.all(
-          //       showData.seasons.map((season: { season_number: number }) =>
-          //         fetch(
-          //           `${API_URL}/tv/${input.id}/season/${season.season_number}`,
-          //           options,
-          //         ).then((res) => res.json()),
-          //       ),
-          //     );
-          //   }
-          //   return [];
-          // }),
         ]);
 
         if (!tvResponse.ok) {
@@ -182,14 +168,17 @@ export const tvRouter = createTRPCRouter({
         const recommendationsData = await recommendationsResponse.json();
         const similarData = await similarResponse.json();
 
+        const convertDataSimilar = ConvertTMDBData(similarData);
+        const convertRecommendationsData = ConvertTMDBData(recommendationsData);
+
         const combinedTvData = {
           ...tvData,
           credits: creditsData,
           videos: videosData,
           images: imagesData,
           reviews: reviewsData,
-          recommendations: recommendationsData,
-          similar: similarData,
+          recommendations: convertRecommendationsData,
+          similar: convertDataSimilar,
         };
 
         const {
@@ -197,7 +186,7 @@ export const tvRouter = createTRPCRouter({
           error,
           data: tvDetailData,
         } = PickTvFullDetail.safeParse(combinedTvData);
-        
+
         if (!success) {
           console.error("🚀[ERROR]: ", error.issues);
           throw new TRPCError({

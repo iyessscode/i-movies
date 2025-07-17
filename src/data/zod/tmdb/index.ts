@@ -4,6 +4,7 @@ import {
   BaseCastSchema,
   BaseCrewSchema,
   BaseGenreSchema,
+  BaseResultsSchema,
   PickCast,
   PickCrew,
   PickImage,
@@ -85,6 +86,22 @@ export type TPickMovieListWithMediaType = z.infer<
 export type TPickPeopleListWithMediaType = z.infer<
   typeof PickPeopleListWithMediaType
 >;
+
+export const TMDBResponseSchema = z.object({
+  dates: z
+    .object({
+      maximum: z.string(),
+      minimum: z.string(),
+    })
+    .optional(),
+  page: z.number(),
+  results: z.array(BaseResultsSchema),
+  total_pages: z.number(),
+  total_results: z.number(),
+});
+
+export type TBaseResults = z.infer<typeof BaseResultsSchema>;
+export type TTMDBResponse = z.infer<typeof TMDBResponseSchema>;
 
 export type TMedia = TPickMovieList | TPickTvList | TPickPeopleList;
 export type TMediaWithMediaType =

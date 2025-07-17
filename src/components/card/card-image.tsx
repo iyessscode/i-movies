@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { TMDB_IMAGE } from "@/data/constants";
 import { IconStar } from "@/data/icons";
-import { TLinkPrefix } from "@/data/types";
 import { cn } from "@/lib/utils";
 
 import { Card, CardFooter } from "@/components/ui/card";
@@ -11,11 +10,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type CardImageProps = {
   id: number;
-  linkPrefix: TLinkPrefix;
+  linkPrefix: string;
   imageUrl: string | null;
+  imageType?: "poster" | "backdrop" | "profile";
   title: string;
   description?: string | null;
-  voteAverage?: number | null;
+  voteAverage?: string;
   isPoster?: boolean;
   useBackground?: boolean;
   priority?: boolean;
@@ -25,10 +25,10 @@ export const CardImage = ({
   id,
   linkPrefix,
   imageUrl,
+  imageType = "poster",
   title,
   description,
-  voteAverage = null,
-  isPoster = true,
+  voteAverage,
   useBackground = false,
   priority = false,
 }: CardImageProps) => {
@@ -42,7 +42,7 @@ export const CardImage = ({
   return (
     <Card
       className={cn(
-        "gap-0 border-0 bg-transparent p-0",
+        "size-full gap-0 border-0 bg-transparent p-0",
         useBackground && "bg-card size-full border",
       )}
     >
@@ -50,15 +50,17 @@ export const CardImage = ({
         <div
           className={cn(
             "relative overflow-hidden rounded-lg",
-            isPoster ? "aspect-2/3" : "aspect-video",
+            imageType === "poster" || imageType === "profile"
+              ? "aspect-2/3"
+              : "aspect-video",
           )}
         >
-          {voteAverage !== 0 && (
+          {voteAverage !== "0.0" && (
             <div className="absolute top-0 left-0 flex h-7 w-16 items-center justify-center">
               <div className="bg-primary border-background absolute z-20 size-full rounded-br-lg transition-colors duration-150 ease-in" />
               <div className="z-20 flex items-center justify-center gap-x-2 text-white">
                 <IconStar />
-                <span>{voteAverage && voteAverage.toFixed(1)}</span>
+                <span>{voteAverage && voteAverage}</span>
               </div>
             </div>
           )}

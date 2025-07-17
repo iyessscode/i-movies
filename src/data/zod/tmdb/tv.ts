@@ -5,6 +5,7 @@ import {
   BaseMediaSchema,
   BaseProductionCompanySchema,
   BaseProductionCountrySchema,
+  BaseResultsSchema,
   BaseSpokenLanguageSchema,
   PickCast,
   PickCrew,
@@ -122,13 +123,13 @@ const TvFullDetailSchema = TvDetailSchema.extend({
   }),
   recommendations: z.object({
     page: z.number(),
-    results: z.array(PickTvList),
+    results: z.array(BaseResultsSchema),
     total_pages: z.number(),
     total_results: z.number(),
   }),
   similar: z.object({
     page: z.number(),
-    results: z.array(PickTvList),
+    results: z.array(BaseResultsSchema),
     total_pages: z.number(),
     total_results: z.number(),
   }),

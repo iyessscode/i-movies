@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { BasePeopleSchema } from "@/data/zod/tmdb/base";
+import { BasePeopleSchema, BaseResultsSchema } from "@/data/zod/tmdb/base";
 import {
   PickMovieListWithCast,
   PickMovieListWithCrew,
@@ -18,6 +18,13 @@ const PeopleListSchema = BasePeopleSchema.extend({
   known_for_department: z.string().nullish(),
 });
 
+export const PickPeopleList = PeopleListSchema.pick({
+  id: true,
+  name: true,
+  profile_path: true,
+  known_for: true,
+});
+
 const PeopleListWithMediaType = PeopleListSchema.extend({
   media_type: z.literal("person"),
 });
@@ -31,13 +38,6 @@ export const PickPeopleListWithMediaType = PeopleListWithMediaType.pick({
   known_for: true,
   popularity: true,
   media_type: true,
-});
-
-export const PickPeopleList = PeopleListSchema.pick({
-  id: true,
-  name: true,
-  profile_path: true,
-  known_for: true,
 });
 
 const PeopleSocialSchema = z
@@ -68,7 +68,7 @@ const PeopleDetailSchema = BasePeopleSchema.extend({
 });
 
 const PeopleFullDetailSchema = PeopleDetailSchema.extend({
-  known_for: z.array(MediaUnionSchema),
+  known_for: z.array(BaseResultsSchema),
   social: PeopleSocialSchema,
   movie_credits: z.object({
     id: z.number().default(0),

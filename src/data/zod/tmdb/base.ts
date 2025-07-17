@@ -77,6 +77,25 @@ export const BaseCrewSchema = BaseCreditSchema.extend({
   job: z.string(),
 });
 
+export const BaseResultsSchema = z.object({
+  id: z.number().default(0),
+  mediaType: z.enum(["movie", "tv", "person"]).default("movie"),
+  title: z.string(),
+  imageUrl: z.object({
+    posterUrl: z.string().nullish(),
+    backdropUrl: z.string().nullish(),
+    profileUrl: z.string().nullish(),
+  }),
+  detail: z.object({
+    overview: z.string().optional(),
+    releaseDate: z.string().optional(),
+    gender: z.string().optional(),
+    department: z.string().optional(),
+    knownFor: z.string().optional(),
+  }),
+  voteAverage: z.string().optional(),
+});
+
 const BaseVideoSchema = z.object({
   iso_639_1: z.string(),
   iso_3166_1: z.string(),

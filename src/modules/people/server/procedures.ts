@@ -3,8 +3,9 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
-import { PeopleListResponseSchema } from "@/data/zod/tmdb";
+import { TMDBResponseSchema } from "@/data/zod/tmdb";
 import { PickPeopleFullDetail } from "@/data/zod/tmdb/people";
+import { ConvertResultData, ConvertTMDBData } from "@/lib/convert-data";
 
 const API_URL = process.env.TMDB_API_URL;
 
@@ -24,7 +25,6 @@ export const peopleRouter = createTRPCRouter({
         cursor: z.number().default(1),
       }),
     )
-    .output(PeopleListResponseSchema)
     .query(async ({ input }) => {
       const params = new URLSearchParams();
       params.append("page", input.cursor.toString());
@@ -36,28 +36,29 @@ export const peopleRouter = createTRPCRouter({
         );
 
         if (!tmdbRes.ok) {
-          console.error(`[❌ PEOPLE_ROUTER | GETLIST]: ${tmdbRes.text()}`);
+          console.error(`[❌ PEOPLE_ROUTER | GET_MANY]: ${tmdbRes.text()}`);
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "[PEOPLE_ROUTER | GETLIST]: Failed to fetch TMDB",
+            message: "[PEOPLE_ROUTER | GET_MANY]: Failed to fetch TMDB",
             cause: tmdbRes.text(),
           });
         }
 
         const data = await tmdbRes.json();
+        const convertData = ConvertTMDBData(data);
 
         const {
           success,
           error,
           data: peopleData,
-        } = PeopleListResponseSchema.safeParse(data);
+        } = TMDBResponseSchema.safeParse(convertData);
 
         if (!success) {
-          console.error(`[❌ PEOPLE_ROUTER | GETLIST]: ${error.issues}`);
+          console.error(error.issues);
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message:
-              "[PEOPLE_ROUTER | GETLIST]: Failed to parsed PEOPLE_LIST from TMDB",
+              "[TV_ROUTER | GET_MANY]: Failed to parsed TV_LIST from TMDB",
             cause: error.issues,
           });
         }
@@ -72,7 +73,7 @@ export const peopleRouter = createTRPCRouter({
         }
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "[PEOPLE_ROUTER | GETLIST]: Internal Server Error",
+          message: "[PEOPLE_ROUTER | GET_MANY]: Internal Server Error",
           cause: errorMessage,
         });
       }
@@ -147,10 +148,12 @@ export const peopleRouter = createTRPCRouter({
           : { cast: [] };
         const movieCreditsData = await movieCredits.json();
 
+        const convertCreditsDataCast = ConvertResultData(creditsData.cast);
+
         const combinedPeopleData = {
           ...peopleData,
           social: socialData,
-          known_for: creditsData.cast || [],
+          known_for: convertCreditsDataCast || [],
           movie_credits: movieCreditsData || [],
         };
 

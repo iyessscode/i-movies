@@ -1,14 +1,12 @@
 "use client";
 
-import { ButtonScrollTop } from "@/components/button-scroll-top";
-import { GridCard } from "@/components/grid-card";
-import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
-import { Footer } from "@/components/navigation/footer";
-import { IconLoader } from "@/data/icons";
-import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
-import { convertDataImage } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+
+import { ButtonScrollTop } from "@/components/button-scroll-top";
+import { CardImage } from "@/components/card/card-image";
+import { LoadMore } from "@/components/load-more";
+import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
 
 type Props = {
   category: "multi" | "movie" | "person" | "tv";
@@ -41,13 +39,6 @@ export const SearchView = ({ category, search }: Props) => {
     ).values(),
   );
 
-  const dataGrid = convertDataImage({ allData });
-
-  const loadMoreRef = useInfiniteScroll({
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  });
   return (
     <div className="flex w-full flex-col">
       <ButtonScrollTop />
@@ -58,21 +49,30 @@ export const SearchView = ({ category, search }: Props) => {
           &quot;{decodeURIComponent(search)}&quot;
         </span>
       </p>
-      <GridCard items={dataGrid} />
-      {hasNextPage ? (
-        <div ref={loadMoreRef} className="flex justify-center py-4">
-          {isFetchingNextPage && (
-            <IconLoader className="text-primary h-8 w-8 animate-spin" />
-          )}
-        </div>
-      ) : (
-        <>
-          <p className="text-muted-foreground py-4 text-center">
-            No more results
-          </p>
-          <Footer />
-        </>
-      )}
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-5">
+        {allData.map((item, index) => {
+          const imageUrl = item.imageUrl.posterUrl ?? null;
+          const description = item.detail.releaseDate ?? null;
+
+          return (
+            <div key={`${item.id}-${index}`} className="w-full">
+              <CardImage
+                id={item.id}
+                linkPrefix={item.mediaType}
+                imageUrl={imageUrl}
+                title={item.title}
+                description={description}
+                voteAverage={item.voteAverage ? item.voteAverage : undefined}
+              />
+            </div>
+          );
+        })}
+      </div>
+      <LoadMore
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        fetchNextPage={fetchNextPage}
+      />
     </div>
   );
 };

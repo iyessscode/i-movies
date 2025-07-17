@@ -3,7 +3,12 @@ import z from "zod";
 import { createTRPCRouter, publicProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
-import { MediaListResponseSchema, TMediaWithMediaType } from "@/data/zod/tmdb";
+import {
+  MediaListResponseSchema,
+  TMDBResponseSchema,
+  TMediaWithMediaType,
+} from "@/data/zod/tmdb";
+import { ConvertTMDBData } from "@/lib/convert-data";
 
 const API_URL = process.env.TMDB_API_URL;
 
@@ -30,10 +35,6 @@ export const searchRouter = createTRPCRouter({
 
       params.append("query", input.query);
       params.append("page", input.cursor.toString());
-
-      console.log(
-        `API_SEARCH: ${API_URL}/search/${input.category}?${params.toString()}`,
-      );
 
       try {
         const tmdbRes = await fetch(
@@ -62,11 +63,13 @@ export const searchRouter = createTRPCRouter({
             ) || [],
         };
 
+        const convertData = ConvertTMDBData(filteredData);
+
         const {
           success,
           error,
           data: searchData,
-        } = MediaListResponseSchema.safeParse(filteredData);
+        } = TMDBResponseSchema.safeParse(convertData);
 
         if (!success) {
           console.error(error.issues);

@@ -7,7 +7,8 @@ import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { TMDB_IMAGE } from "@/data/constants";
-import { cn, convertDataImage } from "@/lib/utils";
+import { IconFilm, IconTv } from "@/data/icons";
+import { cn } from "@/lib/utils";
 
 import {
   CardCarousel,
@@ -20,7 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ButtonScrollTop } from "@/components/button-scroll-top";
 import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { IconFilm, IconTv } from "@/data/icons";
+
 import { PeopleKnownFor } from "@/modules/people/ui/components/people-known-for-movie";
 import {
   PersonalInfo,
@@ -69,8 +70,6 @@ export const PeopleIdView = ({ id }: Props) => {
       url: (id: string) => `https://imdb.com/name/${id}`,
     },
   ].filter(({ key }) => data.social?.[key as keyof typeof data.social]);
-
-  const dataKnownForCarousel = convertDataImage({ allData: data.known_for });
 
   return (
     <div className="flex w-full flex-col">
@@ -141,8 +140,8 @@ export const PeopleIdView = ({ id }: Props) => {
               </Container>
               <CardCarousel
                 label="Known For"
-                items={dataKnownForCarousel}
-                linkPrefix={"movie"}
+                items={data.known_for}
+                imageType="poster"
                 className="basis-1/2 md:basis-1/4 lg:basis-1/6"
               />
               <Tabs defaultValue="movie">

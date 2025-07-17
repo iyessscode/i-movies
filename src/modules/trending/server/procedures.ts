@@ -3,7 +3,8 @@ import z from "zod";
 import { createTRPCRouter, publicProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
-import { MediaListResponseSchema } from "@/data/zod/tmdb";
+import { TMDBResponseSchema } from "@/data/zod/tmdb";
+import { ConvertTMDBData } from "@/lib/convert-data";
 
 const API_URL = process.env.TMDB_API_URL;
 
@@ -44,19 +45,20 @@ export const trendingRouter = createTRPCRouter({
         }
 
         const data = await tmdbRes.json();
+        const convertData = ConvertTMDBData(data);
 
         const {
           success,
           error,
           data: trendingData,
-        } = MediaListResponseSchema.safeParse(data);
+        } = TMDBResponseSchema.safeParse(convertData);
 
         if (!success) {
           console.error(error.issues);
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message:
-              "[TV_ROUTER | GET_MANY]: Failed to parsed TV_LIST from TMDB",
+              "[TRENDING_ROUTER | GET_MANY]: Failed to parsed MOVIE_LIST from TMDB",
             cause: error.issues,
           });
         }
