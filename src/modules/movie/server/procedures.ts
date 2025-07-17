@@ -3,12 +3,9 @@ import z from "zod";
 import { createTRPCRouter, publicProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
-import {
-  MovieCreditsResponseSchema,
-  TMDBResponseSchema,
-} from "@/data/zod/tmdb";
+import { MovieCreditsResponseSchema, ResponseSchema } from "@/data/zod/tmdb";
 import { PickMovieFullDetail } from "@/data/zod/tmdb/movie";
-import { ConvertTMDBData } from "@/lib/convert-data";
+import { ConvertResultData, ConvertTMDBData } from "@/lib/convert-data";
 
 const API_URL = process.env.TMDB_API_URL;
 
@@ -57,7 +54,7 @@ export const movieRouter = createTRPCRouter({
           success,
           error,
           data: movieData,
-        } = TMDBResponseSchema.safeParse(convertData);
+        } = ResponseSchema.safeParse(convertData);
 
         if (!success) {
           console.error(error.issues);
@@ -244,9 +241,14 @@ export const movieRouter = createTRPCRouter({
         const movieData = await movieResponse.json();
         const creditsData = await creditsResponse.json();
 
+        const convertCreditsDataCast = ConvertResultData(creditsData.cast);
+        const convertCreditsDataCrew = ConvertResultData(creditsData.crew);
+
         const combinedData = {
-          ...creditsData,
+          id: creditsData.id,
           title: movieData.title,
+          cast: convertCreditsDataCast,
+          crew: convertCreditsDataCrew,
         };
 
         const {

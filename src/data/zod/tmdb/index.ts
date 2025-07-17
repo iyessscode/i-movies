@@ -71,8 +71,8 @@ export const MediaListResponseSchema = z.object({
 export const MovieCreditsResponseSchema = z.object({
   id: z.number().default(0),
   title: z.string(),
-  cast: z.array(BaseCastSchema),
-  crew: z.array(BaseCrewSchema),
+  cast: z.array(BaseResultsSchema),
+  crew: z.array(BaseResultsSchema),
 });
 
 export type TPickMovieList = z.infer<typeof PickMovieList>;
@@ -87,7 +87,7 @@ export type TPickPeopleListWithMediaType = z.infer<
   typeof PickPeopleListWithMediaType
 >;
 
-export const TMDBResponseSchema = z.object({
+export const ResponseSchema = z.object({
   dates: z
     .object({
       maximum: z.string(),
@@ -101,7 +101,7 @@ export const TMDBResponseSchema = z.object({
 });
 
 export type TBaseResults = z.infer<typeof BaseResultsSchema>;
-export type TTMDBResponse = z.infer<typeof TMDBResponseSchema>;
+export type TResponse = z.infer<typeof ResponseSchema>;
 
 export type TMedia = TPickMovieList | TPickTvList | TPickPeopleList;
 export type TMediaWithMediaType =

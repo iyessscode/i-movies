@@ -3,7 +3,7 @@ import z from "zod";
 import { createTRPCRouter, publicProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
-import { TMDBResponseSchema, TMediaWithMediaType } from "@/data/zod/tmdb";
+import { ResponseSchema, TMediaWithMediaType } from "@/data/zod/tmdb";
 import { ConvertTMDBData } from "@/lib/convert-data";
 
 const API_URL = process.env.TMDB_API_URL;
@@ -65,7 +65,7 @@ export const searchRouter = createTRPCRouter({
           success,
           error,
           data: searchData,
-        } = TMDBResponseSchema.safeParse(convertData);
+        } = ResponseSchema.safeParse(convertData);
 
         if (!success) {
           console.error(error.issues);

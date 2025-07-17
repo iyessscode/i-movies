@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
-import { TMDBResponseSchema } from "@/data/zod/tmdb";
+import { ResponseSchema } from "@/data/zod/tmdb";
 import { PickPeopleFullDetail } from "@/data/zod/tmdb/people";
 import { ConvertResultData, ConvertTMDBData } from "@/lib/convert-data";
 
@@ -51,7 +51,7 @@ export const peopleRouter = createTRPCRouter({
           success,
           error,
           data: peopleData,
-        } = TMDBResponseSchema.safeParse(convertData);
+        } = ResponseSchema.safeParse(convertData);
 
         if (!success) {
           console.error(error.issues);

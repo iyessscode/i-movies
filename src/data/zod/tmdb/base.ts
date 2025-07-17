@@ -92,6 +92,8 @@ export const BaseResultsSchema = z.object({
     gender: z.string().optional(),
     department: z.string().optional(),
     knownFor: z.string().optional(),
+    character: z.string().optional(),
+    job: z.string().optional(),
   }),
   popularity: z.number().optional(),
   voteAverage: z.string().optional(),

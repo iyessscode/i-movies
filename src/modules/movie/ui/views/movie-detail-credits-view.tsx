@@ -25,10 +25,11 @@ export const MovieDetailCreditsView = ({ id }: Props) => {
 
   const crewByDepartment = data.crew.reduce(
     (acc, crew) => {
-      if (!acc[crew.department]) {
-        acc[crew.department] = [];
+      const department = crew.detail.department || "Other";
+      if (!acc[department]) {
+        acc[department] = [];
       }
-      acc[crew.department].push(crew);
+      acc[department].push(crew);
       return acc;
     },
     {} as Record<string, typeof data.crew>,
@@ -55,11 +56,11 @@ export const MovieDetailCreditsView = ({ id }: Props) => {
                     <div className="relative aspect-2/3 w-14 overflow-hidden rounded-lg">
                       <Image
                         src={
-                          item.profile_path
-                            ? `${TMDB_IMAGE}/w92${item.profile_path}`
+                          item.imageUrl.profileUrl
+                            ? `${TMDB_IMAGE}/w92${item.imageUrl.profileUrl}`
                             : "/logo.svg"
                         }
-                        alt={item.name}
+                        alt={item.title}
                         fill
                         sizes="16.66vw"
                         className="bg-primary/10 object-cover"
@@ -67,14 +68,14 @@ export const MovieDetailCreditsView = ({ id }: Props) => {
                     </div>
                     <div className="flex flex-1 flex-col space-y-1">
                       <h1 className="line-clamp-1 text-lg font-semibold">
-                        {item.name}
+                        {item.title}
                       </h1>
                       <ul className="flex flex-col text-sm">
                         <li className="flex flex-wrap">
                           <p className="text-muted-foreground/50">
                             {"Gender: "}
                             <span className="text-muted-foreground">
-                              {` ${convertGender(item.gender)}`}
+                              {item.detail.gender}
                             </span>
                           </p>
                         </li>
@@ -82,7 +83,7 @@ export const MovieDetailCreditsView = ({ id }: Props) => {
                           <p className="text-muted-foreground/50">
                             {"Character: "}
                             <span className="text-muted-foreground">
-                              {` ${item.character}`}
+                              {` ${item.detail.character}`}
                             </span>
                           </p>
                         </li>
@@ -107,11 +108,11 @@ export const MovieDetailCreditsView = ({ id }: Props) => {
                         <div className="relative aspect-2/3 w-14 overflow-hidden rounded-lg">
                           <Image
                             src={
-                              item.profile_path
-                                ? `${TMDB_IMAGE}/w92${item.profile_path}`
+                              item.imageUrl.profileUrl
+                                ? `${TMDB_IMAGE}/w92${item.imageUrl.profileUrl}`
                                 : "/logo.svg"
                             }
-                            alt={item.name}
+                            alt={item.title}
                             fill
                             sizes="16.66vw"
                             className="bg-primary/10 object-cover"
@@ -119,14 +120,14 @@ export const MovieDetailCreditsView = ({ id }: Props) => {
                         </div>
                         <div className="flex flex-1 flex-col space-y-1">
                           <h1 className="line-clamp-1 text-lg font-semibold">
-                            {item.name}
+                            {item.title}
                           </h1>
                           <ul className="flex flex-col text-sm">
                             <li className="flex flex-wrap">
                               <p className="text-muted-foreground/50">
                                 {"Gender: "}
                                 <span className="text-muted-foreground">
-                                  {` ${convertGender(item.gender)}`}
+                                  {item.detail.gender}
                                 </span>
                               </p>
                             </li>
@@ -134,7 +135,7 @@ export const MovieDetailCreditsView = ({ id }: Props) => {
                               <p className="text-muted-foreground/50">
                                 {"Job: "}
                                 <span className="text-muted-foreground">
-                                  {` ${item.job}`}
+                                  {` ${item.detail.job}`}
                                 </span>
                               </p>
                             </li>

@@ -1,17 +1,6 @@
 import { TLinkPrefix } from "@/data/types";
-import { TBaseResults, TMedia } from "@/data/zod/tmdb";
+import { TBaseResults, TMedia, TResponse } from "@/data/zod/tmdb";
 import { convertGender, formatDate } from "@/lib/utils";
-
-export type ReturnType = {
-  dates?: {
-    maximum: string;
-    minimum: string;
-  };
-  page: number;
-  results: Array<TBaseResults>;
-  total_pages: number;
-  total_results: number;
-};
 
 type ResultType = {
   id: number;
@@ -30,6 +19,8 @@ type ResultType = {
   known_for_department?: string;
   overview?: string;
   popularity?: number;
+  job?: string;
+  character?: string;
 };
 
 type ResponseType = {
@@ -43,7 +34,7 @@ type ResponseType = {
   total_results: number;
 };
 
-export const ConvertTMDBData = (allData: ResponseType): ReturnType => {
+export const ConvertTMDBData = (allData: ResponseType): TResponse => {
   if (allData.dates) {
     const minDate = new Date(allData.dates.minimum);
     const maxDate = new Date(allData.dates.maximum);
@@ -78,13 +69,15 @@ export const ConvertResultData = (
         department?: string;
         knownFor?: string;
         popularity?: number;
+        job?: string;
+        character?: string;
       };
     } = {
       id: data.id,
-      mediaType: "movie", // Default, will be overridden
+      mediaType: "movie",
       title: data.title || data.name || "Unknown Title",
       voteAverage: data.vote_average ? data.vote_average.toFixed(1) : "0.0",
-      popularity: data.popularity, // Added popularity field
+      popularity: data.popularity,
       imageUrl: {
         posterUrl: data.poster_path ?? null,
         backdropUrl: data.backdrop_path ?? null,
@@ -96,11 +89,12 @@ export const ConvertResultData = (
         gender: data.gender ? convertGender(data.gender) : undefined,
         department: data.known_for_department || data.department,
         knownFor: undefined,
-        popularity: data.popularity, // Added popularity to detail
+        popularity: data.popularity,
+        job: data.job,
+        character: data.character,
       },
     };
 
-    // Handle movie type
     if (data.media_type === "movie" || ("title" in data && data.title)) {
       return {
         ...base,
@@ -138,6 +132,7 @@ export const ConvertResultData = (
         mediaType: "person",
         detail: {
           ...base.detail,
+          gender: convertGender(data.gender!),
           knownFor: data.known_for
             ?.slice(0, 3)
             .map((knownData: TMedia) =>
