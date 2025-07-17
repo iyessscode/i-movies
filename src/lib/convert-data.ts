@@ -29,6 +29,7 @@ type ResultType = {
   department?: string;
   known_for_department?: string;
   overview?: string;
+  popularity?: number;
 };
 
 type ResponseType = {
@@ -55,90 +56,7 @@ export const ConvertTMDBData = (allData: ResponseType): ReturnType => {
     });
   }
 
-  const resultsData = allData.results.map((data): TBaseResults => {
-    // Base properties for all media types
-    const base: Omit<TBaseResults, "mediaType" | "detail"> & {
-      mediaType: TLinkPrefix;
-      detail: {
-        overview?: string;
-        releaseDate?: string;
-        gender?: string;
-        department?: string;
-        knownFor?: string;
-      };
-    } = {
-      id: data.id,
-      mediaType: "movie", // Default, will be overridden
-      title: data.title || data.name || "Unknown Title",
-      voteAverage: data.vote_average ? data.vote_average.toFixed(1) : "0.0",
-      imageUrl: {
-        posterUrl: data.poster_path ?? null,
-        backdropUrl: data.backdrop_path ?? null,
-        profileUrl: data.profile_path ?? null,
-      },
-      detail: {
-        overview: data.overview,
-        releaseDate: undefined,
-        gender: data.gender ? convertGender(data.gender) : undefined,
-        department: data.known_for_department,
-        knownFor: undefined,
-      },
-    };
-
-    // Handle movie type
-    if (data.media_type === "movie" || ("title" in data && data.title)) {
-      return {
-        ...base,
-        mediaType: "movie",
-        detail: {
-          ...base.detail,
-          releaseDate: data.release_date
-            ? formatDate(data.release_date)
-            : undefined,
-        },
-      };
-    }
-
-    // Handle TV type
-    if (data.media_type === "tv" || ("name" in data && data.first_air_date)) {
-      return {
-        ...base,
-        mediaType: "tv",
-        detail: {
-          ...base.detail,
-          releaseDate: data.first_air_date
-            ? formatDate(data.first_air_date)
-            : undefined,
-        },
-      };
-    }
-
-    // Handle person type
-    if (
-      data.media_type === "person" ||
-      ("profile_path" in data && data.profile_path)
-    ) {
-      return {
-        ...base,
-        mediaType: "person",
-        detail: {
-          ...base.detail,
-          knownFor: data.known_for
-            ?.slice(0, 3)
-            .map((knownData: TMedia) =>
-              "title" in knownData ? knownData.title : knownData.name,
-            )
-            .join(", "),
-        },
-      };
-    }
-
-    // Fallback for unknown types
-    return {
-      ...base,
-      mediaType: "movie",
-    };
-  });
+  const resultsData = ConvertResultData(allData.results);
 
   return {
     ...allData,
@@ -159,12 +77,14 @@ export const ConvertResultData = (
         gender?: string;
         department?: string;
         knownFor?: string;
+        popularity?: number;
       };
     } = {
       id: data.id,
       mediaType: "movie", // Default, will be overridden
       title: data.title || data.name || "Unknown Title",
       voteAverage: data.vote_average ? data.vote_average.toFixed(1) : "0.0",
+      popularity: data.popularity, // Added popularity field
       imageUrl: {
         posterUrl: data.poster_path ?? null,
         backdropUrl: data.backdrop_path ?? null,
@@ -176,6 +96,7 @@ export const ConvertResultData = (
         gender: data.gender ? convertGender(data.gender) : undefined,
         department: data.known_for_department || data.department,
         knownFor: undefined,
+        popularity: data.popularity, // Added popularity to detail
       },
     };
 

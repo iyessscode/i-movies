@@ -53,7 +53,7 @@ export const MobileSearch = ({
               value={query}
               onChange={handleInputChange}
               onFocus={isFocused}
-              className="bg-background pr-16 placeholder:font-semibold placeholder:tracking-wide placeholder:text-neutral-500 placeholder:italic"
+              className="bg-background pr-16 placeholder:text-sm placeholder:font-semibold placeholder:tracking-wide placeholder:text-neutral-500 placeholder:italic"
               aria-label="Search"
             />
             <div className="absolute top-1/2 right-0 flex -translate-y-1/2 items-center justify-center">

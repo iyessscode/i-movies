@@ -93,6 +93,7 @@ export const BaseResultsSchema = z.object({
     department: z.string().optional(),
     knownFor: z.string().optional(),
   }),
+  popularity: z.number().optional(),
   voteAverage: z.string().optional(),
 });
 

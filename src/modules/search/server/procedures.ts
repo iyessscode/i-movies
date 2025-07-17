@@ -3,11 +3,7 @@ import z from "zod";
 import { createTRPCRouter, publicProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
-import {
-  MediaListResponseSchema,
-  TMDBResponseSchema,
-  TMediaWithMediaType,
-} from "@/data/zod/tmdb";
+import { TMDBResponseSchema, TMediaWithMediaType } from "@/data/zod/tmdb";
 import { ConvertTMDBData } from "@/lib/convert-data";
 
 const API_URL = process.env.TMDB_API_URL;

@@ -78,7 +78,7 @@ export const GridViewSkeleton = () => {
     <div className="mx-auto flex w-full max-w-[1280px] flex-col">
       <BreadcrumbsSkeleton />
       <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-5">
-        {Array.from({ length: length }).map((_, index) => (
+        {Array.from({ length: 10 }).map((_, index) => (
           <div key={index} className="w-full">
             <CardImageSkeleton />
           </div>

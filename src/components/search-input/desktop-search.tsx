@@ -41,7 +41,7 @@ export const DesktopSearch = ({
           value={query}
           onChange={handleInputChange}
           onFocus={isFocused}
-          className="bg-background pr-16 pl-4 placeholder:font-semibold placeholder:tracking-wide placeholder:text-neutral-500 placeholder:italic"
+          className="bg-background pr-16 pl-4 placeholder:text-sm placeholder:font-semibold placeholder:tracking-wide placeholder:text-neutral-500 placeholder:italic"
           aria-label="Search"
         />
         <div className="absolute top-1/2 right-2 flex -translate-y-1/2 gap-1">

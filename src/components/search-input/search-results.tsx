@@ -42,11 +42,15 @@ export const SearchResults = ({ query, handleSubmit }: Props) => {
     );
   }
 
+  const sortedData = [...searchData.results].sort(
+    (a, b) => b.popularity! - a.popularity!,
+  );
+
   return (
     <div className="px-4">
       <ScrollArea className="bg-background border-primary/50 z-50 max-h-[60vh] overflow-y-auto rounded-md border p-4 [&::-webkit-scrollbar]:hidden">
         <div className="flex flex-col items-center justify-center space-y-2">
-          {searchData.results.map((item) => {
+          {sortedData.map((item) => {
             return (
               <Link
                 key={item.id}
